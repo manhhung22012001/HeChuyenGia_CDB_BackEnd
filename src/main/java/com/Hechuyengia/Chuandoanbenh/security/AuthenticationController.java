@@ -41,16 +41,16 @@ public class AuthenticationController {
    @CrossOrigin
    @PostMapping("/register") // đăng ký
    public ResponseEntity<?> post(@RequestBody UserEntity input) {
-       if (input.getUsername() == null || input.getUsername().isEmpty() ||
-           input.getPassword() == null || input.getPassword().isEmpty()  ||
-           input.getFullname() == null || input.getFullname().isEmpty() ||
-           input.getPhonenumber() <=0 ||
-           input.getRole() ==null || input.getRole().isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.valueOf(400));
-        }
+//       if (input.getUsername() == null || input.getUsername().isEmpty() ||
+//           input.getPassword() == null || input.getPassword().isEmpty()  ||
+//           input.getFullname() == null || input.getFullname().isEmpty() ||
+//           input.getPhonenumber() <=0 ||
+//           input.getRole() ==null || input.getRole().isEmpty()) {
+//            return new ResponseEntity<>(null, HttpStatus.valueOf(400));
+//        }
        
        if(userRepository.existsByUsername(input.getUsername())){
-            return new ResponseEntity<>(null, HttpStatus.valueOf(404));
+            return new ResponseEntity<>(null, HttpStatus.valueOf(400));
        }
        else{
        userRepository.save(input);
