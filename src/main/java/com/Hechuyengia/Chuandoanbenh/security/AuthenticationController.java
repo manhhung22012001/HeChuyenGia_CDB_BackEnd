@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
+import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
+import java.util.List;
 import org.springframework.web.bind.annotation.RequestBody;
 /**
  *
@@ -23,8 +25,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
-     @Autowired
+    @Autowired
     UserRepository userRepository;
+    
+    @Autowired
+    private TrieuChungService trieuchungService;
 
     @CrossOrigin
     @PostMapping("/login")
@@ -41,14 +46,7 @@ public class AuthenticationController {
    @CrossOrigin
    @PostMapping("/register") // đăng ký
    public ResponseEntity<?> post(@RequestBody UserEntity input) {
-//       if (input.getUsername() == null || input.getUsername().isEmpty() ||
-//           input.getPassword() == null || input.getPassword().isEmpty()  ||
-//           input.getFullname() == null || input.getFullname().isEmpty() ||
-//           input.getPhonenumber() <=0 ||
-//           input.getRole() ==null || input.getRole().isEmpty()) {
-//            return new ResponseEntity<>(null, HttpStatus.valueOf(400));
-//        }
-       
+      
        if(userRepository.existsByUsername(input.getUsername())){
             return new ResponseEntity<>(null, HttpStatus.valueOf(400));
        }
@@ -57,5 +55,11 @@ public class AuthenticationController {
        return new ResponseEntity<>(null, HttpStatus.valueOf(201));
        }
    }
+   @CrossOrigin
+   @PostMapping("/diagnostic") // đăng ký
+    public ResponseEntity<List<Object[]>> getTrieuChungWithCountGreaterThanSix() {
+        List<Object[]> trieuchungResults = trieuchungService.getTrieuChungWithCountGreaterThanSix();
+        return ResponseEntity.ok(trieuchungResults);
+    }
      
 }

@@ -3,19 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
 package com.Hechuyengia.Chuandoanbenh.repository;
+
+
+import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.LienKetTrieuChungLuatEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungBenhEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
-import com.Hechuyengia.Chuandoanbenh.entity.TrieuchungEntity;
+
 /**
  *
  * @author tranm
  */
-public interface TrieuChungRepository extends JpaRepository<TrieuchungEntity, Long>{
-    @Query(value = "SELECT u FROM trieu_trung u WHERE u.matc=:matc")// trả về list mã bệnh
-    List<TrieuchungEntity> getTrieuChungbymatc(@Param("matc") String ma_benh);
-    
-    @Query("SELECT u FROM trieu_trung u WHERE u.matc=:matc")// trả về duy nhất giá trị mã bệnh 
-    public TrieuchungEntity findOne(@Param("matc")String ma_benh);
+public interface TrieuChungRepository extends JpaRepository<TrieuChungEntity, Long>{
+         @Query("SELECT tc.ten_trieu_chung, COUNT(*) AS so_lan_xuat_hien " +
+           "FROM TrieuChungBenhEntity tcb " +
+           "JOIN tcb.trieuChung tc " +
+           "GROUP BY tc.ten_trieu_chung " +
+           "HAVING COUNT(*) > 6")
+    List<Object[]> findTrieuChungWithCountGreaterThanSix();
 }
