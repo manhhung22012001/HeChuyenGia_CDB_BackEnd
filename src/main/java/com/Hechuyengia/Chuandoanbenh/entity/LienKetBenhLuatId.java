@@ -13,33 +13,35 @@ import javax.persistence.Id;
  */
 
 public class LienKetBenhLuatId implements Serializable{
-    private int ma_luat;
-    private int ma_benh;
+    private int luat;
+    private int maBenh;
     // contructer
 
     public LienKetBenhLuatId() {
     }
 
-    public LienKetBenhLuatId(int ma_luat, int ma_benh) {
-        this.ma_luat = ma_luat;
-        this.ma_benh = ma_benh;
+    public LienKetBenhLuatId(int luat, int maBenh) {
+        this.luat = luat;
+        this.maBenh = maBenh;
     }
 
-    public int getMa_luat() {
-        return ma_luat;
+    public int getLuat() {
+        return luat;
     }
 
-    public void setMa_luat(int ma_luat) {
-        this.ma_luat = ma_luat;
+    public void setLuat(int luat) {
+        this.luat = luat;
     }
 
-    public int getMa_benh() {
-        return ma_benh;
+    public int getMaBenh() {
+        return maBenh;
     }
 
-    public void setMa_benh(int ma_benh) {
-        this.ma_benh = ma_benh;
+    public void setMaBenh(int maBenh) {
+        this.maBenh = maBenh;
     }
+
+   
 
     
     
@@ -50,12 +52,12 @@ public class LienKetBenhLuatId implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LienKetBenhLuatId that = (LienKetBenhLuatId) o;
-        return ma_luat == that.ma_luat &&
-               ma_benh == that.ma_benh;
+        return luat == that.luat &&
+               maBenh == that.maBenh;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ma_luat, ma_benh);
+        return Objects.hash(luat, maBenh);
     }
 }

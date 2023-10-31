@@ -23,28 +23,30 @@ public class LienKetBenhLuatEntity implements Serializable{
     @Id
     @ManyToOne
     @JoinColumn(name = "ma_luat")
-    private LuatEntity ma_luat;
+    private LuatEntity luat;
     
     @Id
     @ManyToOne
     @JoinColumn(name = "ma_benh")
-    private BenhEntity ma_benh;
+    private BenhEntity maBenh;
 
-    public LuatEntity getMa_luat() {
-        return ma_luat;
+    public LuatEntity getLuat() {
+        return luat;
     }
 
-    public void setMa_luat(LuatEntity ma_luat) {
-        this.ma_luat = ma_luat;
+    public void setLuat(LuatEntity luat) {
+        this.luat = luat;
     }
 
-    public BenhEntity getMa_benh() {
-        return ma_benh;
+    public BenhEntity getMaBenh() {
+        return maBenh;
     }
 
-    public void setMa_benh(BenhEntity ma_benh) {
-        this.ma_benh = ma_benh;
+    public void setMaBenh(BenhEntity maBenh) {
+        this.maBenh = maBenh;
     }
+
+    
 
    
     

@@ -26,6 +26,15 @@ public class TrieuChungEntity implements Serializable{
     @Column(name = "ten_trieu_chung")
     private String ten_trieu_chung;
 
+    public TrieuChungEntity() {
+    }
+
+    public TrieuChungEntity(int ma_trieu_chung, String ten_trieu_chung) {
+        this.ma_trieu_chung = ma_trieu_chung;
+        this.ten_trieu_chung = ten_trieu_chung;
+    }
+    
+    
     public int getMa_trieu_chung() {
         return ma_trieu_chung;
     }
@@ -41,6 +50,8 @@ public class TrieuChungEntity implements Serializable{
     public void setTen_trieu_chung(String ten_trieu_chung) {
         this.ten_trieu_chung = ten_trieu_chung;
     }
+
+    
 
     
     

@@ -18,10 +18,10 @@ import java.util.List;
  * @author tranm
  */
 public interface TrieuChungRepository extends JpaRepository<TrieuChungEntity, Long>{
-         @Query("SELECT tc.ten_trieu_chung, COUNT(*) AS so_lan_xuat_hien " +
-           "FROM TrieuChungBenhEntity tcb " +
-           "JOIN tcb.trieuChung tc " +
-           "GROUP BY tc.ten_trieu_chung " +
-           "HAVING COUNT(*) > 6")
+         @Query("SELECT tc.ma_trieu_chung, tc.ten_trieu_chung, COUNT(*) " +
+       "FROM TrieuChungBenhEntity tcb " +
+       "JOIN tcb.trieuChung tc " +
+       "GROUP BY tc.ma_trieu_chung, tc.ten_trieu_chung " +
+       "HAVING COUNT(*) > 3 ")
     List<Object[]> findTrieuChungWithCountGreaterThanSix();
 }

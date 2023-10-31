@@ -45,16 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/*").permitAll()//allow login api for all
-                .antMatchers("/user/*").hasRole("USER")
-                .antMatchers("/user/get/*").hasRole("USER")
-                .antMatchers("/detail/all").hasRole("USER")
-                .antMatchers("/detail/all/*").hasRole("USER")
-                .antMatchers("/detail/add").hasRole("USER")
-                .antMatchers("/wallet/get/*").hasRole("USER")
-                .antMatchers("/wallet/add").hasRole("USER")
-                .antMatchers("/wallet/*").hasRole("USER")
-                .antMatchers("/detail/tn/*").hasRole("USER")
-                .antMatchers("/detail/ct/*").hasRole("USER")
+                .antMatchers("/diagnosis/*").permitAll()
                 .anyRequest().authenticated();
     }
 }

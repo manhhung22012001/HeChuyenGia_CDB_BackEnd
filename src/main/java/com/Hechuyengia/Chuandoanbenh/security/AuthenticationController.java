@@ -55,11 +55,11 @@ public class AuthenticationController {
        return new ResponseEntity<>(null, HttpStatus.valueOf(201));
        }
    }
-   @CrossOrigin
-   @PostMapping("/diagnostic") // đăng ký
-    public ResponseEntity<List<Object[]>> getTrieuChungWithCountGreaterThanSix() {
-        List<Object[]> trieuchungResults = trieuchungService.getTrieuChungWithCountGreaterThanSix();
-        return ResponseEntity.ok(trieuchungResults);
-    }
-     
+//   @CrossOrigin
+//   @PostMapping("/diagnostic") // 
+//    public ResponseEntity<List<Object[]>> getTrieuChungWithCountGreaterThanSix() {
+//        List<Object[]> trieuchungResults = trieuchungService.getTrieuChungWithCountGreaterThanSix();
+//        return ResponseEntity.ok(trieuchungResults);
+//    }
+//     
 }
