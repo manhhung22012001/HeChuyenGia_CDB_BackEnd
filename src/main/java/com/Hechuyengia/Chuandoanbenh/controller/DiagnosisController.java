@@ -47,4 +47,12 @@ public class DiagnosisController {
         List<TrieuChungEntity> symptomsInSelectedLuats = diagnosisService.getSymptomsInSelectedLuats(selectedSymptomCodes);
         return ResponseEntity.ok(symptomsInSelectedLuats);
     }
+    @CrossOrigin
+    @PostMapping("/ketqua")
+     public ResponseEntity<List<BenhEntity>> KQ_cdb(@RequestBody List<String> danh_sach_tc) {
+        System.out.println("mang nhan duoc "+ danh_sach_tc);
+        List<BenhEntity> findSymptomsInSelectedBenh = diagnosisService.getSymptomsInSelectedBenh(danh_sach_tc);
+        return ResponseEntity.ok(findSymptomsInSelectedBenh);
+        
+    }
 }

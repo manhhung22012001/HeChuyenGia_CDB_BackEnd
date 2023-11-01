@@ -2,6 +2,7 @@ package com.Hechuyengia.Chuandoanbenh.service;
 
 import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.LuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,24 +30,28 @@ public List<TrieuChungEntity> getSymptomsInSelectedLuats(List<String> selectedSy
     for (Object[] result : results) {
         String ma_trieu_chung = result[0].toString();
         String ten_trieu_chung = result[1].toString();
-
-        
-        
         // Kiểm tra xem mã triệu chứng có tồn tại trong mảng truyền vào không
         if (!selectedSymptomCodes.contains(ma_trieu_chung)) {
             int ma_trieu_chung_int = Integer.parseInt(ma_trieu_chung);
             TrieuChungEntity trieuchungEntity = new TrieuChungEntity(ma_trieu_chung_int, ten_trieu_chung);
             trieuchungEntities.add(trieuchungEntity);
-            // anh dep trai quá
-        }
-        
-        
-        
-       
+           
+        }    
     }
-
     return trieuchungEntities;
 }
-    
-    
+
+   public List<BenhEntity> getSymptomsInSelectedBenh(List<String> danh_sach_tc) {
+    List<Object[]> results = luatRepository.findSymptomsInSelectedBenh(danh_sach_tc, danh_sach_tc.size());
+    List<BenhEntity> benhEntities = new ArrayList<>();
+
+    for (Object[] result : results) {
+        String ma_benh = result[0].toString();
+        String ten_benh = result[1].toString();
+        int ma_benh_int = Integer.parseInt(ma_benh);
+        BenhEntity benhEntity = new BenhEntity(ma_benh_int, ten_benh);
+        benhEntities.add(benhEntity);
+    }
+    return benhEntities;
+}
 }
