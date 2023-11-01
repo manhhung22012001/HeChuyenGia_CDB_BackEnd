@@ -22,6 +22,6 @@ public interface TrieuChungRepository extends JpaRepository<TrieuChungEntity, Lo
        "FROM TrieuChungBenhEntity tcb " +
        "JOIN tcb.trieuChung tc " +
        "GROUP BY tc.ma_trieu_chung, tc.ten_trieu_chung " +
-       "HAVING COUNT(*) > 3 ")
+       "HAVING COUNT(*) > 3 or count(*)=1")
     List<Object[]> findTrieuChungWithCountGreaterThanSix();
 }
