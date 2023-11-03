@@ -55,4 +55,12 @@ public class DiagnosisController {
         return ResponseEntity.ok(findSymptomsInSelectedBenh);
         
     }
+     @CrossOrigin
+    @PostMapping("/ketqua1")
+    public ResponseEntity<List<BenhEntity>> KQ_cdb1(@RequestBody List<String> danh_sach_tc) {
+        List<BenhEntity> findSymptomsInSelectedBenh1 = diagnosisService.getSymptomsInSelectedBenh1(danh_sach_tc);
+        return ResponseEntity.ok(findSymptomsInSelectedBenh1);
+        
+    }
+     
 }

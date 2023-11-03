@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.web.bind.annotation.RequestBody;
 /**
  *
@@ -38,11 +40,13 @@ public class AuthenticationController {
             @RequestParam(value = "password", defaultValue = "") String password) {
         UserEntity user = userRepository.findOne(username);
         if (user != null) {
+            String fullname = user.getFullname();
             return new ResponseEntity<>(user, HttpStatus.valueOf(200));
         } else {
             return new ResponseEntity<>(null, HttpStatus.valueOf(404));
         }
     }
+
    @CrossOrigin
    @PostMapping("/register") // đăng ký
    public ResponseEntity<?> post(@RequestBody UserEntity input) {

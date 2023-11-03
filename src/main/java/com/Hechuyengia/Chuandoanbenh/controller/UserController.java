@@ -23,24 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/taskbar-qtv")
 
 public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/get/{id_user}")
-    public Optional<UserEntity> get(@PathVariable Long id_user) {
-        return userRepository.findById(id_user);
-    }
-
+    
     @GetMapping("/all")
     public List<UserEntity> list() {
         return userRepository.findAll();
     }
 
-    @GetMapping("/get")
-    public UserEntity getUser(@RequestParam String username) {
-        return userRepository.findOne(username);
-    }
+    
 }
