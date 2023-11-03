@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author tranm
  */
 
-@CrossOrigin(origins = "http://localhost:4200")
+
 @RestController
 @RequestMapping("/taskbar-qtv")
 
@@ -29,8 +29,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    
-    @GetMapping("/all")
+    @CrossOrigin
+    @GetMapping("/getall")
     public List<UserEntity> list() {
         return userRepository.findAll();
     }
