@@ -50,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/taskbar-qtv/*").permitAll()
                 .antMatchers("/taskbar-qtv/delete/*").permitAll()
                 .antMatchers("/taskbar-qtv/edit/*").permitAll()
+                .antMatchers("/taskbar-cg/*").permitAll()
                 .anyRequest().authenticated();
     }
 }
