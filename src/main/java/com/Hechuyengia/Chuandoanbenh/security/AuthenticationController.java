@@ -52,40 +52,6 @@ public class AuthenticationController {
         this.tokenProvider = tokenProvider;
     }
 
-//    @CrossOrigin
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login( // Đây là phản hồi được trả về từ API.
-//            @RequestParam(value = "username", defaultValue = "") String username,// Sử dụng để chấp nhận các tham số từ yêu cầu HTTP. Trong trường hợp này, bạn chấp nhận username và password từ yêu cầu POST.
-//            @RequestParam(value = "password", defaultValue = "") String password) {
-//        UserEntity user = userRepository.findOne(username);
-//        if (user != null) {
-//            String fullname = user.getFullname();
-//            return new ResponseEntity<>(user, HttpStatus.valueOf(200));
-//        } else {
-//            return new ResponseEntity<>(null, HttpStatus.valueOf(404));
-//        }
-//    }
-//    @CrossOrigin
-//    @PostMapping("/login")
-//    public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-//        try {
-//            String encodedPassword = passwordEncoder.encode(loginRequest.getPassword());
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            loginRequest.getUsername(),
-//                            encodedPassword
-//                    )
-//            );
-//
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//            String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-//            return new LoginResponse(jwt,"200");
-//        } catch (AuthenticationException ex) {
-//          
-//          return new LoginResponse(null, "Xác thực không thành công");
-//        }
-//
-//    }
     @CrossOrigin
     @PostMapping("/login")
     public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -119,11 +85,28 @@ public class AuthenticationController {
         }
     }
 
-//   @CrossOrigin
-//   @PostMapping("/diagnostic") // 
-//    public ResponseEntity<List<Object[]>> getTrieuChungWithCountGreaterThanSix() {
-//        List<Object[]> trieuchungResults = trieuchungService.getTrieuChungWithCountGreaterThanSix();
-//        return ResponseEntity.ok(trieuchungResults);
+    @PostMapping("/check-user-info")
+    public ResponseEntity<UserEntity> checkUserInfo(@RequestBody UserEntity request) {
+        // Kiểm tra thông tin người dùng (phoneNumber và username) ở đây
+        String phoneNumberAsString = String.valueOf(request.getPhonenumber());
+        boolean isValidUser = userRepository.existsByPhoneNumberAndUsername(phoneNumberAsString, request.getUsername());
+
+        // Tạo một đối tượng UserEntity với trạng thái hợp lệ hoặc không hợp lệ
+        UserEntity responseEntity;
+        if (isValidUser) {
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        // Trả về phản hồi với đối tượng UserEntity tương ứng
+        
+    }
+
+//    @PostMapping("/reset-password")
+//    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+//        // Lưu mật khẩu mới vào cơ sở dữ liệu ở đây
+//        // Trả về phản hồi cho phía Angular
+//        // Ví dụ: return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");
 //    }
-//     
 }

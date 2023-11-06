@@ -46,7 +46,8 @@ public class UserController {
     @CrossOrigin
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long userId) {
-        System.out.println("Received DELETE request for user ID: " + userId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //System.out.println("Received DELETE request for user ID: " + userId);
         Optional<UserEntity> user = userRepository.findById(userId);
         if (user.isPresent()) {
             userRepository.deleteById(userId);
@@ -59,7 +60,8 @@ public class UserController {
     @CrossOrigin
     @PutMapping("/edit/{id}")
     public ResponseEntity<UserEntity> updateUser(@PathVariable("id") Long userId, @RequestBody UserEntity updatedUser) {
-        System.out.println("Received Update request for user ID: " + userId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //System.out.println("Received Update request for user ID: " + userId);
         Optional<UserEntity> existingUser = userRepository.findById(userId);
         if (existingUser.isPresent()) {
             UserEntity userToUpdate = existingUser.get();

@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
@@ -18,7 +19,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "user")
-public class UserEntity implements Serializable{
+public class UserEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_user;
@@ -38,6 +40,8 @@ public class UserEntity implements Serializable{
     @Column(name = "role")
     private String role;
 
+    private boolean isValid;
+
     public Long getId_user() {
         return id_user;
     }
@@ -46,12 +50,25 @@ public class UserEntity implements Serializable{
         this.id_user = id_user;
     }
 
-    public UserEntity(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+        boolean existsByPhoneNumberAndUsername(String phoneNumber, String username);
     }
 
-    public UserEntity(){
+    public UserEntity(String username, String password,boolean isValid) {
+        this.username = username;
+        this.password = password;
+        this.isValid = isValid;
+    }
+
+    
+    // Getter và setter cho isValid nếu cần
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
     }
 
     public String getUsername() {
