@@ -93,4 +93,12 @@ public class UserEntity implements Serializable{
     public void setRole(String role) {
         this.role = role;
     }
+
+    public UserEntity orElse(Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public UserEntity get() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

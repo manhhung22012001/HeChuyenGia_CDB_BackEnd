@@ -9,9 +9,13 @@ import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import java.util.List;
 import java.util.Optional;
+import static org.hibernate.annotations.common.util.impl.LoggerFactory.logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +25,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory; 
 /**
  *
  * @author tranm
  */
 @RestController
 @RequestMapping("/taskbar-cg")
+//@PreAuthorize("hasRole('1')")
 public class BenhController {
 
     @Autowired
@@ -36,6 +42,8 @@ public class BenhController {
     @CrossOrigin
     @GetMapping("/getall")
     public List<BenhEntity> list() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
         return benhRepository.findAll();
     }
 
@@ -50,7 +58,7 @@ public class BenhController {
 //            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 //        }
 //    }
-     @CrossOrigin
+    @CrossOrigin
     @GetMapping("/trieuchung/{ma_benh}")
     public ResponseEntity<List<Object[]>> getTrieuChungByMaBenh(@PathVariable int ma_benh) {
         List<Object[]> trieuchung = benhRepository.findTrieuChungByMaBenh(ma_benh);

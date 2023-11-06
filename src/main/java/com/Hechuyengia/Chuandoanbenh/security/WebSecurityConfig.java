@@ -4,37 +4,63 @@
  */
 package com.Hechuyengia.Chuandoanbenh.security;
 
+import com.Hechuyengia.Chuandoanbenh.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean// Spring Boot tạo 1 bean từ kq của phương thức trước đó và đưa vào Spring context
+    private final UserDetailsService userDetailsService;
+
+    public WebSecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
+    @Bean
     @Override
-    public UserDetailsService userDetailsService() {// mã hóa tk
+    public UserDetailsService userDetailsService() {
         return new UserDetailServiceImp();
     }
 
-    ;
+    @Bean(BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+//    }
+
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {// mã hóa mk
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    ;
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-        // phương thức này cấu hình cách xác thực người dùng
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
+    
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -45,13 +71,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/*").permitAll()//allow login api for all
-                .antMatchers("/diagnosis/*").permitAll()
-                
-                .antMatchers("/taskbar-qtv/*").permitAll()
-                .antMatchers("/taskbar-qtv/delete/*").permitAll()
-                .antMatchers("/taskbar-qtv/edit/*").permitAll()
-                .antMatchers("/taskbar-cg/*").permitAll()
-                .antMatchers("/taskbar-cg/trieuchung/*").permitAll()
+                                .antMatchers("/diagnosis/*").permitAll()
+                                .antMatchers("/taskbar-qtv/*").authenticated()
+                                .antMatchers("/taskbar-qtv/delete/*").authenticated()
+                                .antMatchers("/taskbar-qtv/edit/*").authenticated()
+                                .antMatchers("/taskbar-cg/*").authenticated()
+                                .antMatchers("/taskbar-cg/trieuchung/*").authenticated()
                 .anyRequest().authenticated();
+        // Thêm một lớp Filter kiểm tra jwt
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
