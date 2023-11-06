@@ -87,20 +87,15 @@ public class AuthenticationController {
 
     @PostMapping("/check-user-info")
     public ResponseEntity<UserEntity> checkUserInfo(@RequestBody UserEntity request) {
-        // Kiểm tra thông tin người dùng (phoneNumber và username) ở đây
         String phoneNumberAsString = String.valueOf(request.getPhonenumber());
-        boolean isValidUser = userRepository.existsByPhoneNumberAndUsername(phoneNumberAsString, request.getUsername());
+        boolean isValidUser = userRepository.existsByPhonenumberAndUsername(Integer.parseInt(phoneNumberAsString), request.getUsername());
 
-        // Tạo một đối tượng UserEntity với trạng thái hợp lệ hoặc không hợp lệ
         UserEntity responseEntity;
         if (isValidUser) {
             return new ResponseEntity<>(null, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
-        // Trả về phản hồi với đối tượng UserEntity tương ứng
-        
     }
 
 //    @PostMapping("/reset-password")
