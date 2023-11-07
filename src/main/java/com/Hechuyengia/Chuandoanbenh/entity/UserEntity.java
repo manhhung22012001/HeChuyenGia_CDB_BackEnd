@@ -34,10 +34,13 @@ public class UserEntity implements Serializable{
     private String fullname;
 
     @Column(name = "phonenumber")
-    private int phonenumber;
+    private String phonenumber;
 
     @Column(name = "role")
     private String role;
+    
+    @Column(name = "email")
+    private String email;
 
     public Long getId_user() {
         return id_user;
@@ -47,10 +50,6 @@ public class UserEntity implements Serializable{
         this.id_user = id_user;
     }
 
-    public UserEntity(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 
     public UserEntity(){
     }
@@ -79,13 +78,25 @@ public class UserEntity implements Serializable{
         this.fullname = fullname;
     }
 
-    public int getPhonenumber() {
+    public String getPhonenumber() {
         return phonenumber;
     }
 
-    public void setPhonenumber(int phonenumber) {
+    public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
     }
+
+    public UserEntity(Long id_user, String username, String password, String fullname, String phonenumber, String role, String email) {
+        this.id_user = id_user;
+        this.username = username;
+        this.password = password;
+        this.fullname = fullname;
+        this.phonenumber = phonenumber;
+        this.role = role;
+        this.email = email;
+    }
+
+
 
     public String getRole() {
         return role;
@@ -94,6 +105,15 @@ public class UserEntity implements Serializable{
     public void setRole(String role) {
         this.role = role;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     public interface UserRepository extends JpaRepository<UserEntity, Long> {
     boolean existsByPhonenumberAndUsername(String phonenumber, String username);
 }

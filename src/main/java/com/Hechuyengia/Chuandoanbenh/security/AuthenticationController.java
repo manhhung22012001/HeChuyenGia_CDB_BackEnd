@@ -12,19 +12,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.RestController;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
-import java.util.HashMap;
-import java.util.Map;
+import com.Hechuyengia.Chuandoanbenh.service.EmailService;
+import static Email.generateOTP.generateOTP;
 
+import com.Hechuyengia.Chuandoanbenh.service.OtpService;
 import javax.validation.Valid;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.AuthenticationException;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -43,8 +44,15 @@ public class AuthenticationController {
     UserRepository userRepository;
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+    
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private EmailService emailService;
+    
+    @Autowired
+    OtpService otpService;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
@@ -85,15 +93,29 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/check-user-info")
-    public ResponseEntity<UserEntity> checkUserInfo(@RequestBody UserEntity request) {
-        String phoneNumberAsString = String.valueOf(request.getPhonenumber());
-        boolean isValidUser = userRepository.existsByPhonenumberAndUsername(Integer.parseInt(phoneNumberAsString), request.getUsername());
-
-        UserEntity responseEntity;
+    @CrossOrigin
+    @PostMapping("/forgotpass")
+    public ResponseEntity<?> checkUserInfo(@RequestBody UserEntity request) {
+        //String phoneNumberAsString = String.valueOf(request.getPhonenumber());
+        //System.out.println(phoneNumberAsString);
+        boolean isValidUser = userRepository.existsByPhonenumberAndUsername(request.getPhonenumber(), request.getUsername());
+        System.out.println(request.getPhonenumber()+"+"+request.getUsername());
         if (isValidUser) {
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
+            
+             // Tạo mã OTP ngẫu nhiên
+            String otp = generateOTP();
+
+            // Lưu mã OTP vào Redis với email làm key và thời gian hết hạn là 10 phút
+            otpService.saveOtp(request.getEmail(), otp, 10);
+            
+            // Gửi mã OTP đến email của người dùng
+            emailService.sendResetPasswordEmail(request.getEmail(), otp);
+            // lấy user trả về
+              UserEntity user = userRepository.findByUsername(request.getUsername());
+            // Trả về thành công
+             return new ResponseEntity<>(user, HttpStatus.valueOf(200));
         } else {
+            // Người dùng không tồn tại, trả về null hoặc một đối tượng UserEntity rỗng tùy theo nhu cầu của bạn
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
