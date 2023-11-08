@@ -110,7 +110,8 @@ public class AuthenticationController {
             // lấy user trả về
             UserEntity user = userRepository.findByUsername(request.getUsername());
             // Lưu mã OTP vào Redis với email làm key và thời gian hết hạn là 10 phút
-            otpService.saveOtp(request.getEmail(), otp, 3);
+            otpService.saveOtp(request.getEmail(), otp, 10);
+            System.out.println("OTP IS"+otp);
             // Gửi mã OTP đến email của người dùng
             emailService.sendResetPasswordEmail(request.getEmail(), otp);
             
@@ -127,14 +128,18 @@ public class AuthenticationController {
     public ResponseEntity<?> verifyOTP(@RequestBody EmailOtpDTO request) {
         String email = request.getEmail();
         String otp = request.getOtp();
-        System.out.println("OTP IS"+request.getOtp());
+        System.out.println("OTP from request: "+request.getOtp());
+        System.out.println("Mail from request: "+request.getEmail());
         // Kiểm tra mã OTP trong Redis
         String storedOTP = otpService.getOtp(email);
-
+        System.out.println("OTP trong redis: "+storedOTP);
+        
         if (storedOTP != null && storedOTP.equals(otp)) {
            
             // Trả về thông báo thành công với mã HTTP 200
-            return ResponseEntity.ok("Mã OTP đúng");
+            
+            return new ResponseEntity<>(storedOTP, HttpStatus.valueOf(200));
+           
         } else {
             
             // Trả về thông báo lỗi với mã HTTP 400
