@@ -80,6 +80,7 @@ public class AuthenticationController {
     @CrossOrigin
     @PostMapping("/register")
     public ResponseEntity<?> post(@RequestBody UserEntity input) {
+        System.out.println("Ten"+input.getFullname()+"sđt "+input.getPhonenumber()+"email "+ input.getEmail()+"username"+input.getUsername()+"pass"+input.getPassword());
         if (userRepository.existsByUsername(input.getUsername())) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
