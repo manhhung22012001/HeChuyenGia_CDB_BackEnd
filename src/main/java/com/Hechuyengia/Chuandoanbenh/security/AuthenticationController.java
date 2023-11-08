@@ -4,6 +4,7 @@
  */
 package com.Hechuyengia.Chuandoanbenh.security;
 
+import EmailOtpDTO.EmailOtpDTO;
 import com.Hechuyengia.Chuandoanbenh.details.CustomUserDetails;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.service.EmailService;
-import static Email.generateOTP.generateOTP;
+import static EmailOtpDTO.generateOTP.generateOTP;
 
 import com.Hechuyengia.Chuandoanbenh.service.OtpService;
 import javax.validation.Valid;
@@ -42,17 +43,19 @@ public class AuthenticationController {
     private final JwtTokenProvider tokenProvider;
     @Autowired
     UserRepository userRepository;
+    
     @Autowired
     JwtTokenProvider jwtTokenProvider;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Autowired
     private EmailService emailService;
-    
+
     @Autowired
     OtpService otpService;
+    
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
@@ -80,7 +83,7 @@ public class AuthenticationController {
     @CrossOrigin
     @PostMapping("/register")
     public ResponseEntity<?> post(@RequestBody UserEntity input) {
-        System.out.println("Ten"+input.getFullname()+"sđt "+input.getPhonenumber()+"email "+ input.getEmail()+"username"+input.getUsername()+"pass"+input.getPassword());
+        System.out.println("Ten" + input.getFullname() + "sđt " + input.getPhonenumber() + "email " + input.getEmail() + "username" + input.getUsername() + "pass" + input.getPassword());
         if (userRepository.existsByUsername(input.getUsername())) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
@@ -100,31 +103,53 @@ public class AuthenticationController {
         //String phoneNumberAsString = String.valueOf(request.getPhonenumber());
         //System.out.println(phoneNumberAsString);
         boolean isValidUser = userRepository.existsByPhonenumberAndUsername(request.getPhonenumber(), request.getUsername());
-        System.out.println(request.getPhonenumber()+"+"+request.getUsername());
+        //System.out.println(request.getPhonenumber()+"+"+request.getUsername());
         if (isValidUser) {
-            
-             // Tạo mã OTP ngẫu nhiên
-            String otp = generateOTP();
-
+            // Tạo mã OTP ngẫu nhiên
+            String otp = generateOTP();          
+            // lấy user trả về
+            UserEntity user = userRepository.findByUsername(request.getUsername());
             // Lưu mã OTP vào Redis với email làm key và thời gian hết hạn là 10 phút
-            otpService.saveOtp(request.getEmail(), otp, 10);
-            
+            otpService.saveOtp(request.getEmail(), otp, 3);
             // Gửi mã OTP đến email của người dùng
             emailService.sendResetPasswordEmail(request.getEmail(), otp);
-            // lấy user trả về
-              UserEntity user = userRepository.findByUsername(request.getUsername());
+            
             // Trả về thành công
-             return new ResponseEntity<>(user, HttpStatus.valueOf(200));
+            return new ResponseEntity<>(user, HttpStatus.valueOf(200));
         } else {
             // Người dùng không tồn tại, trả về null hoặc một đối tượng UserEntity rỗng tùy theo nhu cầu của bạn
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-//    @PostMapping("/reset-password")
-//    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
-//        // Lưu mật khẩu mới vào cơ sở dữ liệu ở đây
-//        // Trả về phản hồi cho phía Angular
-//        // Ví dụ: return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");
-//    }
+    @CrossOrigin
+    @PostMapping("/CheckOTP")
+    public ResponseEntity<?> verifyOTP(@RequestBody EmailOtpDTO request) {
+        String email = request.getEmail();
+        String otp = request.getOtp();
+        System.out.println("OTP IS"+request.getOtp());
+        // Kiểm tra mã OTP trong Redis
+        String storedOTP = otpService.getOtp(email);
+
+        if (storedOTP != null && storedOTP.equals(otp)) {
+           
+            // Trả về thông báo thành công với mã HTTP 200
+            return ResponseEntity.ok("Mã OTP đúng");
+        } else {
+            
+            // Trả về thông báo lỗi với mã HTTP 400
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mã OTP không đúng");
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody UserEntity request) {
+        // Mã hóa mật khẩu trước khi lưu người dùng
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = passwordEncoder.encode(request.getPassword());
+            request.setPassword(encodedPassword);
+
+            userRepository.save(request);
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
+    }
 }
