@@ -148,7 +148,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody UserEntity request) {
+    public ResponseEntity<?> resetPassword(@RequestBody UserEntity request) {
         // Mã hóa mật khẩu trước khi lưu người dùng
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(request.getPassword());
