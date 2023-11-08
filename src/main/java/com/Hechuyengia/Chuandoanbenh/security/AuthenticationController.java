@@ -20,6 +20,7 @@ import com.Hechuyengia.Chuandoanbenh.service.EmailService;
 import static EmailOtpDTO.generateOTP.generateOTP;
 
 import com.Hechuyengia.Chuandoanbenh.service.OtpService;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -102,7 +103,7 @@ public class AuthenticationController {
     public ResponseEntity<?> checkUserInfo(@RequestBody UserEntity request) {
         //String phoneNumberAsString = String.valueOf(request.getPhonenumber());
         //System.out.println(phoneNumberAsString);
-        boolean isValidUser = userRepository.existsByPhonenumberAndUsername(request.getPhonenumber(), request.getUsername());
+        boolean isValidUser = userRepository.existsByPhonenumberAndUsernameAndEmail(request.getPhonenumber(), request.getUsername(), request.getEmail());
         //System.out.println(request.getPhonenumber()+"+"+request.getUsername());
         if (isValidUser) {
             // Tạo mã OTP ngẫu nhiên
@@ -147,14 +148,37 @@ public class AuthenticationController {
         }
     }
 
+//    @PostMapping("/reset-password")
+//    public ResponseEntity<?> resetPassword(@RequestBody UserEntity request) {
+//        // Mã hóa mật khẩu trước khi lưu người dùng
+//            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//            String encodedPassword = passwordEncoder.encode(request.getPassword());
+//            request.setPassword(encodedPassword);
+//
+//            userRepository.save(request);
+//            return new ResponseEntity<>(null, HttpStatus.CREATED);
+//                
+//    }
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody UserEntity request) {
-        // Mã hóa mật khẩu trước khi lưu người dùng
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String encodedPassword = passwordEncoder.encode(request.getPassword());
-            request.setPassword(encodedPassword);
+public ResponseEntity<?> resetPassword(@RequestBody UserEntity request) {
+    // Mã hóa mật khẩu trước khi lưu người dùng
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    String encodedPassword = passwordEncoder.encode(request.getPassword());
+    request.setPassword(encodedPassword);
 
-            userRepository.save(request);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
-    }
+    // Lấy đối tượng người dùng từ cơ sở dữ liệu dựa trên ID
+    UserEntity user = userRepository.findByUsername(request.getUsername());
+
+   
+        // Cập nhật mật khẩu của người dùng
+        
+        user.setPassword(request.getPassword()); // Cập nhật mật khẩu mới
+
+        // Lưu người dùng đã được cập nhật vào cơ sở dữ liệu
+        userRepository.save(user);
+
+        return new ResponseEntity<>(null,HttpStatus.CREATED);
+    
+}
+
 }
