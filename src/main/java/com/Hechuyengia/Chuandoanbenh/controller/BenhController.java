@@ -26,7 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory; 
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author tranm
@@ -43,8 +44,19 @@ public class BenhController {
     @GetMapping("/getall")
     public List<BenhEntity> list() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         return benhRepository.findAll();
+    }
+
+    
+    @CrossOrigin
+    @GetMapping("/getall12/{loai_he}")
+    public ResponseEntity<List<BenhEntity>> list(@PathVariable String loai_he) {
+        System.out.println("Ma loai he nhan duoc la "+loai_he);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<BenhEntity> result = benhRepository.findByLoaiHe(loai_he);
+        // ... (process result if needed)
+        return ResponseEntity.ok(result);
     }
 
 //    @CrossOrigin

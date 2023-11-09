@@ -25,4 +25,6 @@ public class TrieuChungService {
     public List<Object[]> getTrieuChungWithCountGreaterThanSix() {
         return trieuchungRepository.findTrieuChungWithCountGreaterThanSix();
     }
+
+   
 }

@@ -45,10 +45,5 @@ public class LienKetBenhLuatEntity implements Serializable{
     public void setMaBenh(BenhEntity maBenh) {
         this.maBenh = maBenh;
     }
-
-    
-
    
-    
-    
 }

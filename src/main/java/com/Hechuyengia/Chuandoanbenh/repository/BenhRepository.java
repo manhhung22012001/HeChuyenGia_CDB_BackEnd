@@ -26,4 +26,7 @@ public interface BenhRepository extends JpaRepository<BenhEntity, Long> {
     @Query("SELECT tcb.trieuChung.ma_trieu_chung, tcb.trieuChung.ten_trieu_chung FROM TrieuChungBenhEntity tcb WHERE tcb.benh.ma_benh = :ma_benh")
     List<Object[]> findTrieuChungByMaBenh(@Param("ma_benh") int maBenh);
 
+    @Query("SELECT b FROM BenhEntity b WHERE b.loai_he = :loai_he")
+    List<BenhEntity> findByLoaiHe(@Param("loai_he") String loai_he);
+
 }

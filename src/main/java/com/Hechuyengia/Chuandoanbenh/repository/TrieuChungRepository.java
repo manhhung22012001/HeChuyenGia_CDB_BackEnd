@@ -4,7 +4,6 @@
  */
 package com.Hechuyengia.Chuandoanbenh.repository;
 
-
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.LienKetTrieuChungLuatEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungBenhEntity;
@@ -17,11 +16,13 @@ import java.util.List;
  *
  * @author tranm
  */
-public interface TrieuChungRepository extends JpaRepository<TrieuChungEntity, Long>{
-         @Query("SELECT tc.ma_trieu_chung, tc.ten_trieu_chung, COUNT(*) " +
-       "FROM TrieuChungBenhEntity tcb " +
-       "JOIN tcb.trieuChung tc " +
-       "GROUP BY tc.ma_trieu_chung, tc.ten_trieu_chung " +
-       "HAVING COUNT(*) > 3 or count(*)=1")
+public interface TrieuChungRepository extends JpaRepository<TrieuChungEntity, Long> {
+
+    @Query("SELECT tc.ma_trieu_chung, tc.ten_trieu_chung, COUNT(*) "
+            + "FROM TrieuChungBenhEntity tcb "
+            + "JOIN tcb.trieuChung tc "
+            + "GROUP BY tc.ma_trieu_chung, tc.ten_trieu_chung "
+            + "HAVING COUNT(*) > 3 or count(*)=1")
     List<Object[]> findTrieuChungWithCountGreaterThanSix();
+    
 }
