@@ -59,17 +59,7 @@ public class BenhController {
         return ResponseEntity.ok(result);
     }
 
-//    @CrossOrigin
-//    @GetMapping("/trieuchung/{ma_benh}")
-//    public ResponseEntity<List<String>> getTrieuChungByMaBenh(@PathVariable int ma_benh) {
-//        System.out.println("x=" + ma_benh);
-//        List<String> trieuchung = benhRepository.findTrieuChungByMaBenh(ma_benh);
-//        if (trieuchung != null && !trieuchung.isEmpty()) {
-//            return ResponseEntity.ok(trieuchung);
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        }
-//    }
+
     @CrossOrigin
     @GetMapping("/trieuchung/{ma_benh}")
     public ResponseEntity<List<Object[]>> getTrieuChungByMaBenh(@PathVariable int ma_benh) {
