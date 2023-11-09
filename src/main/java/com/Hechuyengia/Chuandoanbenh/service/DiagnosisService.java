@@ -50,8 +50,9 @@ public class DiagnosisService {
         for (Object[] result : results) {
             String ma_benh = result[0].toString();
             String ten_benh = result[1].toString();
+            String loai_he = result[2].toString();
             int ma_benh_int = Integer.parseInt(ma_benh);
-            BenhEntity benhEntity = new BenhEntity(ma_benh_int, ten_benh);
+            BenhEntity benhEntity = new BenhEntity(ma_benh_int, ten_benh,loai_he);
             benhEntities.add(benhEntity);
         }
         return benhEntities;
@@ -63,8 +64,9 @@ public class DiagnosisService {
         for (Object[] result : results) {
             String ma_benh = result[0].toString();
             String ten_benh = result[1].toString();
+            String loai_he = result[2].toString();
             int ma_benh_int = Integer.parseInt(ma_benh);
-            BenhEntity benhEntity = new BenhEntity(ma_benh_int, ten_benh);
+            BenhEntity benhEntity = new BenhEntity(ma_benh_int, ten_benh,loai_he);
             benhEntities.add(benhEntity);
         }
         return benhEntities;

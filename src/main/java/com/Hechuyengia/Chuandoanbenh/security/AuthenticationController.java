@@ -13,21 +13,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.service.EmailService;
 import static EmailOtpDTO.generateOTP.generateOTP;
-
 import com.Hechuyengia.Chuandoanbenh.service.OtpService;
-import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -84,7 +80,7 @@ public class AuthenticationController {
     @CrossOrigin
     @PostMapping("/register")
     public ResponseEntity<?> post(@RequestBody UserEntity input) {
-        System.out.println("Ten" + input.getFullname() + "sđt " + input.getPhonenumber() + "email " + input.getEmail() + "username" + input.getUsername() + "pass" + input.getPassword());
+        System.out.println("Ten" + input.getFullname() + "sđt " + input.getPhonenumber() + "email " + input.getEmail() + "username" + input.getUsername() + "pass" + input.getPassword()+"status"+input.getStatus());
         if (userRepository.existsByUsername(input.getUsername())) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
@@ -129,11 +125,11 @@ public class AuthenticationController {
     public ResponseEntity<?> verifyOTP(@RequestBody EmailOtpDTO request) {
         String email = request.getEmail();
         String otp = request.getOtp();
-        System.out.println("OTP from request: "+request.getOtp());
-        System.out.println("Mail from request: "+request.getEmail());
+        //System.out.println("OTP from request: "+request.getOtp());
+        //System.out.println("Mail from request: "+request.getEmail());
         // Kiểm tra mã OTP trong Redis
         String storedOTP = otpService.getOtp(email);
-        System.out.println("OTP trong redis: "+storedOTP);
+        //System.out.println("OTP trong redis: "+storedOTP);
         
         if (storedOTP != null && storedOTP.equals(otp)) {
            

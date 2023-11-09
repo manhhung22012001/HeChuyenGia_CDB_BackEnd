@@ -41,6 +41,9 @@ public class UserEntity implements Serializable{
     
     @Column(name = "email")
     private String email;
+    
+    @Column(name = "status")
+    private String status;
 
     public Long getId_user() {
         return id_user;
@@ -86,7 +89,7 @@ public class UserEntity implements Serializable{
         this.phonenumber = phonenumber;
     }
 
-    public UserEntity(Long id_user, String username, String password, String fullname, String phonenumber, String role, String email) {
+    public UserEntity(Long id_user, String username, String password, String fullname, String phonenumber, String role, String email, String status) {
         this.id_user = id_user;
         this.username = username;
         this.password = password;
@@ -94,9 +97,16 @@ public class UserEntity implements Serializable{
         this.phonenumber = phonenumber;
         this.role = role;
         this.email = email;
+        this.status = status;
     }
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getRole() {
         return role;
