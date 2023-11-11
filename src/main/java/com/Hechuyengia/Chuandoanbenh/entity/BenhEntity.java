@@ -37,7 +37,10 @@ public class BenhEntity implements Serializable{
         this.ten_benh = ten_benh;
         this.loai_he = loai_he;
     }
-
+     public BenhEntity(int ma_benh, String ten_benh) {
+        this.ma_benh = ma_benh;
+        this.ten_benh = ten_benh;
+    }
     public int getMa_benh() {
         return ma_benh;
     }
