@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/taskbar-qtv/edit/*").authenticated()
                 .antMatchers("/taskbar-cg/*").authenticated()
                 .antMatchers("/taskbar-cg/trieuchung/*").authenticated()
+                .antMatchers("/taskbar-cg/add-benh-va-trieu-chung/*").authenticated()
                 .anyRequest().authenticated();
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
