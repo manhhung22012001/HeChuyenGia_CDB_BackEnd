@@ -33,27 +33,34 @@ public class BenhMoiService {
     @Autowired
     TrieuChungBenhMoiRepository trieuChungBenhMoiRepository;
 
-   @Transactional
-    public void saveBenhVaTrieuChung(UserEntity userEntity, String tenBenh, String loaiHe, List<String> trieuChungList) {
-        // Tạo mới đối tượng BenhMoiEntity và lưu vào bảng bệnh mới
-        BenhMoiEntity benhMoiEntity = new BenhMoiEntity();
-        benhMoiEntity.setTen_benh_moi(tenBenh);
-        benhMoiEntity.setLoai_he(loaiHe);  // Thêm thông tin loai_he
-        benhMoiEntity.setUserEntity(userEntity);
-        BenhMoiEntity savedBenh = benhMoiRepository.save(benhMoiEntity);
+    @Transactional
+    public void saveBenhVaTrieuChung(UserEntity userEntity, String loaiHe, String tenBenh, List<String> trieuChungList) {
+        try {
+            // Tạo mới đối tượng BenhMoiEntity và lưu vào bảng bệnh mới
+            BenhMoiEntity benhMoiEntity = new BenhMoiEntity();
+            benhMoiEntity.setTen_benh_moi(tenBenh);
+            benhMoiEntity.setLoai_he(loaiHe);
+            benhMoiEntity.setUserEntity(userEntity);
+            BenhMoiEntity savedBenh = benhMoiRepository.save(benhMoiEntity);
 
-        // Lưu triệu chứng và liên kết với bệnh vừa tạo
-        for (String tenTrieuChung : trieuChungList) {
-            // Tạo mới đối tượng TrieuChungMoiEntity và lưu vào bảng triệu chứng mới
-            TrieuChungMoiEntity trieuChungMoiEntity = new TrieuChungMoiEntity();
-            trieuChungMoiEntity.setTen_trieu_chung_moi(tenTrieuChung);
-            TrieuChungMoiEntity savedTrieuChung = trieuChungMoiRepository.save(trieuChungMoiEntity);
+            // Lưu triệu chứng và liên kết với bệnh vừa tạo
+            for (String tenTrieuChung : trieuChungList) {
+                // Tạo mới đối tượng TrieuChungMoiEntity và lưu vào bảng triệu chứng mới
+                TrieuChungMoiEntity trieuChungMoiEntity = new TrieuChungMoiEntity();
+                trieuChungMoiEntity.setTen_trieu_chung_moi(tenTrieuChung);
+                TrieuChungMoiEntity savedTrieuChung = trieuChungMoiRepository.save(trieuChungMoiEntity);
 
-            // Tạo mới đối tượng TrieuChungBenhMoiEntity và lưu vào bảng liên kết
-            TrieuChungBenhMoiEntity trieuChungBenhMoiEntity = new TrieuChungBenhMoiEntity();
-            trieuChungBenhMoiEntity.setBenhMoi(savedBenh);  // Sử dụng đối tượng BenhMoi thay vì mã bệnh mới
-            trieuChungBenhMoiEntity.setTrieuChungMoi(savedTrieuChung);  // Sử dụng đối tượng TrieuChungMoi thay vì mã triệu chứng mới
-            trieuChungBenhMoiRepository.save(trieuChungBenhMoiEntity);
+                // Tạo mới đối tượng TrieuChungBenhMoiEntity và lưu vào bảng liên kết
+                TrieuChungBenhMoiEntity trieuChungBenhMoiEntity = new TrieuChungBenhMoiEntity();
+                trieuChungBenhMoiEntity.setBenhMoi(savedBenh);
+                trieuChungBenhMoiEntity.setTrieuChungMoi(savedTrieuChung);
+                trieuChungBenhMoiRepository.save(trieuChungBenhMoiEntity);
+            }
+        } catch (Exception e) {
+            // Xử lý exception nếu có
+            e.printStackTrace();
+            throw e;
         }
     }
+
 }

@@ -12,6 +12,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import static org.hibernate.annotations.common.util.impl.LoggerFactory.logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,10 @@ public class BenhController {
 
     @Autowired
     BenhRepository benhRepository;
-    
+
     @Autowired
     UserRepository userRepository;
-    
+
     @Autowired
     BenhMoiService benhMoiService;
 
@@ -81,27 +82,54 @@ public class BenhController {
         }
     }
 
-    @CrossOrigin
-    @PostMapping("/add-benh-va-trieu-chung/{id}")
-    public ResponseEntity<HttpStatus> addBenhVaTrieuChung(@PathVariable("id") Long userId,
-            @RequestBody BenhMoiEntity addnewBenh,
-            @RequestParam("loaiHe") String loaiHe,
-            @RequestParam("trieuChungList") List<String> trieuChungList) {
-        try {
-            
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println("Nhan duoc id la: "+ userId+" loai he "+ loaiHe + " danh sach tc: "+ trieuChungList+" ten benh: "+addnewBenh);
-            // Lấy thông tin người dùng từ cơ sở dữ liệu
-            Optional<UserEntity> existingUser = userRepository.findById(userId);
+//    @CrossOrigin
+//@PostMapping("/add-benh-va-trieu-chung/{userId}")
+//public ResponseEntity<HttpStatus> addBenhVaTrieuChung(
+//        @PathVariable("userId") Long userId,
+//        @RequestBody Map<String, Object> requestBody) {
+//    try {
+//        String tenBenh = (String) requestBody.get("ten_benh");
+//        String loaiHe = (String) requestBody.get("loai_he");
+//        
+//        // Assuming "trieu_chung" is a list of strings
+//        List<String> trieuChungList = (List<String>) requestBody.get("trieu_chung");
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
+//
+//        Optional<UserEntity> existingUser = userRepository.findById(userId);
+//
+//        benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, trieuChungList);
+//
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    } catch (Exception e) {
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//    }
+//}
+@CrossOrigin
+@PostMapping("/add-benh-va-trieu-chung/{userId}")
+public ResponseEntity<HttpStatus> addBenhVaTrieuChung(
+        @PathVariable("userId") Long userId,
+        @RequestBody Map<String, Object> requestBody) {
+    try {
+        String tenBenh = (String) requestBody.get("ten_benh");
+        String loaiHe = (String) requestBody.get("loai_he");
 
-            // Gọi service để lưu thông tin bệnh và triệu chứng
-            benhMoiService.saveBenhVaTrieuChung(existingUser.get(), addnewBenh.getTen_benh_moi(), loaiHe, trieuChungList);
+        // Assuming "trieu_chung" is a list of strings
+        List<String> trieuChungList = (List<String>) requestBody.get("trieu_chung");
 
-            return new ResponseEntity<>(HttpStatus.OK);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
 
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Optional<UserEntity> existingUser = userRepository.findById(userId);
+
+        benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, trieuChungList);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+}
+
 
 }
