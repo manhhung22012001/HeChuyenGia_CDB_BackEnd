@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "trieu_chung_benh_moi")
 @IdClass(TrieuChungBenhMoiId.class) // Định nghĩa lớp IdClass
-public class TrieuChungBenhMoiEnity implements Serializable{
+public class TrieuChungBenhMoiEntity implements Serializable{
     @Id
     @ManyToOne
     @JoinColumn(name = "ma_trieu_chung_moi")
@@ -28,12 +28,12 @@ public class TrieuChungBenhMoiEnity implements Serializable{
     @Id
     @ManyToOne
     @JoinColumn(name = "ma_benh_moi")
-    private BenhEntity benhMoi;
+    private BenhMoiEntity benhMoi;
 
-    public TrieuChungBenhMoiEnity() {
+    public TrieuChungBenhMoiEntity() {
     }
 
-    public TrieuChungBenhMoiEnity(TrieuChungMoiEntity trieuChungMoi, BenhEntity benhMoi) {
+    public TrieuChungBenhMoiEntity(TrieuChungMoiEntity trieuChungMoi, BenhMoiEntity benhMoi) {
         this.trieuChungMoi = trieuChungMoi;
         this.benhMoi = benhMoi;
     }
@@ -46,13 +46,13 @@ public class TrieuChungBenhMoiEnity implements Serializable{
         this.trieuChungMoi = trieuChungMoi;
     }
 
-    public BenhEntity getBenhMoi() {
+    public BenhMoiEntity getBenhMoi() {
         return benhMoi;
     }
 
-    public void setBenhMoi(BenhEntity benhMoi) {
+    public void setBenhMoi(BenhMoiEntity benhMoi) {
         this.benhMoi = benhMoi;
     }
-    
+
     
 }

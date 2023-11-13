@@ -5,8 +5,12 @@
 package com.Hechuyengia.Chuandoanbenh.controller;
 
 import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.BenhMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
+import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
 import java.util.List;
 import java.util.Optional;
 import static org.hibernate.annotations.common.util.impl.LoggerFactory.logger;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  *
@@ -39,6 +44,12 @@ public class BenhController {
 
     @Autowired
     BenhRepository benhRepository;
+    
+    @Autowired
+    UserRepository userRepository;
+    
+    @Autowired
+    BenhMoiService benhMoiService;
 
     @CrossOrigin
     @GetMapping("/getall")
@@ -48,17 +59,15 @@ public class BenhController {
         return benhRepository.findAll();
     }
 
-    
     @CrossOrigin
     @GetMapping("/getall12/{loai_he}")
     public ResponseEntity<List<BenhEntity>> list(@PathVariable String loai_he) {
-        System.out.println("Ma loai he nhan duoc la "+loai_he);
+        System.out.println("Ma loai he nhan duoc la " + loai_he);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<BenhEntity> result = benhRepository.findByLoaiHe(loai_he);
         // ... (process result if needed)
         return ResponseEntity.ok(result);
     }
-
 
     @CrossOrigin
     @GetMapping("/trieuchung/{ma_benh}")
@@ -71,6 +80,28 @@ public class BenhController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-    
+
+    @CrossOrigin
+    @PostMapping("/add-benh-va-trieu-chung/{id}")
+    public ResponseEntity<HttpStatus> addBenhVaTrieuChung(@PathVariable("id") Long userId,
+            @RequestBody BenhMoiEntity addnewBenh,
+            @RequestParam("loaiHe") String loaiHe,
+            @RequestParam("trieuChungList") List<String> trieuChungList) {
+        try {
+            
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println("Nhan duoc id la: "+ userId+" loai he "+ loaiHe + " danh sach tc: "+ trieuChungList+" ten benh: "+addnewBenh);
+            // Lấy thông tin người dùng từ cơ sở dữ liệu
+            Optional<UserEntity> existingUser = userRepository.findById(userId);
+
+            // Gọi service để lưu thông tin bệnh và triệu chứng
+            benhMoiService.saveBenhVaTrieuChung(existingUser.get(), addnewBenh.getTen_benh_moi(), loaiHe, trieuChungList);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }
