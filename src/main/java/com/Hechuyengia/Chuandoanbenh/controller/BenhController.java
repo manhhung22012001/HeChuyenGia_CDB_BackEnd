@@ -9,8 +9,10 @@ import com.Hechuyengia.Chuandoanbenh.entity.BenhMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
+import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,6 +55,15 @@ public class BenhController {
     @Autowired
     BenhMoiService benhMoiService;
 
+    @Autowired
+    private TrieuChungRepository trieuChungRepository;
+    
+    private final TrieuChungService trieuchungService;
+    
+     @Autowired
+    public BenhController(TrieuChungService trieuchungService) {
+        this.trieuchungService = trieuchungService;
+    }
     @CrossOrigin
     @GetMapping("/getall")
     public List<BenhEntity> list() {
@@ -83,30 +94,6 @@ public class BenhController {
         }
     }
 
-//    @CrossOrigin
-//@PostMapping("/add-benh-va-trieu-chung/{userId}")
-//public ResponseEntity<HttpStatus> addBenhVaTrieuChung(
-//        @PathVariable("userId") Long userId,
-//        @RequestBody Map<String, Object> requestBody) {
-//    try {
-//        String tenBenh = (String) requestBody.get("ten_benh");
-//        String loaiHe = (String) requestBody.get("loai_he");
-//        
-//        // Assuming "trieu_chung" is a list of strings
-//        List<String> trieuChungList = (List<String>) requestBody.get("trieu_chung");
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
-//
-//        Optional<UserEntity> existingUser = userRepository.findById(userId);
-//
-//        benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, trieuChungList);
-//
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    } catch (Exception e) {
-//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
-//}
     @CrossOrigin
     @PostMapping("/add-benh-va-trieu-chung/{userId}")
     public ResponseEntity<HttpStatus> addBenhVaTrieuChung(
@@ -137,4 +124,12 @@ public class BenhController {
         }
     }
 
+    @CrossOrigin
+    @GetMapping("/suggest")
+    public ResponseEntity<List<String>> suggestTrieuChung(@RequestParam("keyword") String keyword) {
+        System.out.println("Keywork nhan duoc la: "+keyword);
+        keyword = "%" + keyword + "%";
+        List<String> suggestedTrieuChung = trieuchungService.suggestTrieuChung(keyword);
+        return ResponseEntity.ok(suggestedTrieuChung);
+    }
 }

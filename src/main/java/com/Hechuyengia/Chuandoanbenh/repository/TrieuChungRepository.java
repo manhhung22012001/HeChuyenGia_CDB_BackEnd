@@ -11,11 +11,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author tranm
  */
+@Repository
 public interface TrieuChungRepository extends JpaRepository<TrieuChungEntity, Long> {
 
     @Query("SELECT tc.ma_trieu_chung, tc.ten_trieu_chung, COUNT(*) "
@@ -24,5 +26,8 @@ public interface TrieuChungRepository extends JpaRepository<TrieuChungEntity, Lo
             + "GROUP BY tc.ma_trieu_chung, tc.ten_trieu_chung "
             + "HAVING COUNT(*) > 3 or count(*)=1")
     List<Object[]> findTrieuChungWithCountGreaterThanSix();
-    
+
+    @Query("SELECT tc.ten_trieu_chung FROM TrieuChungEntity tc WHERE LOWER(tc.ten_trieu_chung) LIKE LOWER(:keyword)")
+    public List<String> findByTen_trieu_chungContainingIgnoreCase(@Param("keyword") String keyword);
+
 }
