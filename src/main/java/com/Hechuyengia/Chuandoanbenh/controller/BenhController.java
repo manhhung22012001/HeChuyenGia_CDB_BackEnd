@@ -14,6 +14,7 @@ import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import static org.hibernate.annotations.common.util.impl.LoggerFactory.logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -106,30 +107,34 @@ public class BenhController {
 //        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //    }
 //}
-@CrossOrigin
-@PostMapping("/add-benh-va-trieu-chung/{userId}")
-public ResponseEntity<HttpStatus> addBenhVaTrieuChung(
-        @PathVariable("userId") Long userId,
-        @RequestBody Map<String, Object> requestBody) {
-    try {
-        String tenBenh = (String) requestBody.get("ten_benh");
-        String loaiHe = (String) requestBody.get("loai_he");
+    @CrossOrigin
+    @PostMapping("/add-benh-va-trieu-chung/{userId}")
+    public ResponseEntity<HttpStatus> addBenhVaTrieuChung(
+            @PathVariable("userId") Long userId,
+            @RequestBody Map<String, Object> requestBody) {
+        try {
+            String tenBenh = (String) requestBody.get("ten_benh");
+            String loaiHe = (String) requestBody.get("loai_he");
 
-        // Assuming "trieu_chung" is a list of strings
-        List<String> trieuChungList = (List<String>) requestBody.get("trieu_chung");
+            // Assuming "trieu_chung" is a list of objects with a "trieu_chung" field
+            List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
 
-        Optional<UserEntity> existingUser = userRepository.findById(userId);
+            Optional<UserEntity> existingUser = userRepository.findById(userId);
 
-        benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, trieuChungList);
+            // Trích xuất tên triệu chứng từ mỗi đối tượng Map
+            List<String> tenTrieuChungList = trieuChungList.stream()
+                    .map(trieuChung -> trieuChung.get("trieu_chung"))
+                    .collect(Collectors.toList());
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    } catch (Exception e) {
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, tenTrieuChungList);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-}
-
 
 }
