@@ -4,7 +4,7 @@
  */
 package com.Hechuyengia.Chuandoanbenh.security;
 
-import EmailOtpDTO.EmailOtpDTO;
+import com.Hechuyengia.Chuandoanbenh.DTO.EmailOtpDTO;
 import com.Hechuyengia.Chuandoanbenh.details.CustomUserDetails;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.service.EmailService;
-import static EmailOtpDTO.generateOTP.generateOTP;
+import static com.Hechuyengia.Chuandoanbenh.DTO.generateOTP.generateOTP;
 import com.Hechuyengia.Chuandoanbenh.service.OtpService;
 import javax.validation.Valid;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -81,9 +81,11 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<?> post(@RequestBody UserEntity input) {
         System.out.println("Ten" + input.getFullname() + "sđt " + input.getPhonenumber() + "email " + input.getEmail() + "username" + input.getUsername() + "pass" + input.getPassword()+"status"+input.getStatus());
-        if (userRepository.existsByUsername(input.getUsername())) {
+        if (userRepository.existsByEmail(input.getEmail())) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        } else {
+        } else if(userRepository.existsByPhonenumber(input.getPhonenumber()))
+        {return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);}
+        else {
             // Mã hóa mật khẩu trước khi lưu người dùng
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(input.getPassword());

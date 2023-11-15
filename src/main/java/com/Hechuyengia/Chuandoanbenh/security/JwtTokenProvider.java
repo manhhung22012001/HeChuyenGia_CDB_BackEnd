@@ -45,6 +45,7 @@ public class JwtTokenProvider {
         claims.put("phonenumber", userDetails.getUserEnity().getPhonenumber());
         claims.put("role", userDetails.getUserEnity().getRole());
         claims.put("status", userDetails.getUserEnity().getStatus());
+        claims.put("email", userDetails.getUserEnity().getEmail());
         // Tạo chuỗi json web token từ id của user.
          return Jwts.builder()
                 .setClaims(claims) // Thêm payload vào token

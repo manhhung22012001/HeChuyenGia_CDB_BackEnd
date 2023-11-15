@@ -7,9 +7,11 @@ package com.Hechuyengia.Chuandoanbenh.entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -44,7 +46,11 @@ public class UserEntity implements Serializable{
     
     @Column(name = "status")
     private String status;
-
+    
+    
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private UserDetailEntity userDetail;
+    
     public Long getId_user() {
         return id_user;
     }

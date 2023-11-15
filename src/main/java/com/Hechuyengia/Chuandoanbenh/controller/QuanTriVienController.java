@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/taskbar-qtv")
 
-public class UserController {
+public class QuanTriVienController {
 
     @Autowired
     UserRepository userRepository;
@@ -67,7 +67,8 @@ public class UserController {
             UserEntity userToUpdate = existingUser.get();
             userToUpdate.setFullname(updatedUser.getFullname());
             userToUpdate.setPhonenumber(updatedUser.getPhonenumber());
-            userToUpdate.setRole(updatedUser.getRole());
+            userToUpdate.setStatus(updatedUser.getStatus());
+            userToUpdate.setEmail(updatedUser.getEmail());
             // Cập nhật các trường thông tin khác tương ứng
 
             UserEntity savedUser = userRepository.save(userToUpdate);

@@ -75,12 +75,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/*").permitAll()//allow login api for all
                 .antMatchers("/diagnosis/*").permitAll()
+                
                 .antMatchers("/taskbar-qtv/*").authenticated()
                 .antMatchers("/taskbar-qtv/delete/*").authenticated()
                 .antMatchers("/taskbar-qtv/edit/*").authenticated()
+                
                 .antMatchers("/taskbar-cg/*").authenticated()
                 .antMatchers("/taskbar-cg/trieuchung/*").authenticated()
                 .antMatchers("/taskbar-cg/add-benh-va-trieu-chung/*").authenticated()
+                .antMatchers("/taskbar-cg/getuserdetail/*").authenticated()
+                
+                .antMatchers("/taskbar-ks/*").authenticated()
+                
                 .anyRequest().authenticated();
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

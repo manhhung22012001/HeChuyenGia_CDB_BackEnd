@@ -4,6 +4,7 @@
  */
 package com.Hechuyengia.Chuandoanbenh.controller;
 
+import com.Hechuyengia.Chuandoanbenh.DTO.UserInfoDTO;
 import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.BenhMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
@@ -44,7 +45,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestController
 @RequestMapping("/taskbar-cg")
 //@PreAuthorize("hasRole('1')")
-public class BenhController {
+public class ChuyenGiaController {
 
     @Autowired
     BenhRepository benhRepository;
@@ -60,8 +61,8 @@ public class BenhController {
     
     private final TrieuChungService trieuchungService;
     
-     @Autowired
-    public BenhController(TrieuChungService trieuchungService) {
+    @Autowired
+    public ChuyenGiaController(TrieuChungService trieuchungService) {
         this.trieuchungService = trieuchungService;
     }
     @CrossOrigin
@@ -128,8 +129,20 @@ public class BenhController {
     @GetMapping("/suggest")
     public ResponseEntity<List<String>> suggestTrieuChung(@RequestParam("keyword") String keyword) {
         System.out.println("Keywork nhan duoc la: "+keyword);
-        keyword = "%" + keyword + "%";
+//        keyword = "%" + keyword + "%";
         List<String> suggestedTrieuChung = trieuchungService.suggestTrieuChung(keyword);
         return ResponseEntity.ok(suggestedTrieuChung);
+    }
+    
+    @GetMapping("/getuserdetail/{userId}")
+    public ResponseEntity<UserInfoDTO> getUserInfo(@PathVariable("userId") Long userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserInfoDTO userInfo = userRepository.getUserInfoById(userId);
+
+        if (userInfo != null) {
+            return new ResponseEntity<>(userInfo, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

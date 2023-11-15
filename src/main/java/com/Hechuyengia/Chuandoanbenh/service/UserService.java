@@ -4,6 +4,7 @@
  */
 package com.Hechuyengia.Chuandoanbenh.service;
 
+import com.Hechuyengia.Chuandoanbenh.DTO.UserInfoDTO;
 import com.Hechuyengia.Chuandoanbenh.details.CustomUserDetails;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
@@ -67,7 +68,9 @@ public class UserService implements UserDetailsService {
 
         return new CustomUserDetails(user); // CustomUserDetails là implement của UserDetails với các thông tin cần thiết của người dùng
     }
-
+    public UserInfoDTO getUserInfo(Long userId) {
+        return repo.getUserInfoById(userId);
+    }
     
     
 
