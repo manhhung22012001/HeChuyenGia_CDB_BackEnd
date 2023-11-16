@@ -13,6 +13,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 public class UserService implements UserDetailsService {
-    
+
     @Value("${uploadPath}")
     private String uploadPath;
 
@@ -37,7 +38,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     UserRepository repo;
-    
+
     @Autowired
     private UserDetailRepository userDetailRepository;
 
@@ -68,8 +69,6 @@ public class UserService implements UserDetailsService {
         user.setPassword(encodedPassword);
         repo.save(user);
     }
-    
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -81,11 +80,12 @@ public class UserService implements UserDetailsService {
 
         return new CustomUserDetails(user); // CustomUserDetails là implement của UserDetails với các thông tin cần thiết của người dùng
     }
+
     public UserInfoDTO getUserInfo(Long userId) {
         return repo.getUserInfoById(userId);
     }
-    
-     public String saveUserDetailsAndFiles(Long userId, MultipartFile anhdaidien, MultipartFile bangTotNghiepYKhoa, MultipartFile chungChiHanhNghe, MultipartFile chungNhanChuyenKhoa, String fullname, String phonenumber, String email) {
+
+   public String saveUserDetailsAndFiles(Long userId, MultipartFile anhdaidien, MultipartFile bangTotNghiepYKhoa, MultipartFile chungChiHanhNghe, MultipartFile chungNhanChuyenKhoa) {
         UserEntity user = repo.findById(userId).orElse(null);
 
         if (user != null) {
@@ -96,11 +96,7 @@ public class UserService implements UserDetailsService {
                 String chungChiHanhNghePath = saveFile(chungChiHanhNghe);
                 String chungNhanChuyenKhoaPath = saveFile(chungNhanChuyenKhoa);
 
-                // Lưu thông tin vào bảng UserEntity
-                user.setFullname(fullname);
-                user.setPhonenumber(phonenumber);
-                user.setEmail(email);
-                repo.save(user);
+                
 
                 // Lưu thông tin vào bảng UserDetailEntity
                 UserDetailEntity userDetail = new UserDetailEntity();
@@ -131,6 +127,5 @@ public class UserService implements UserDetailsService {
         }
         return null;
     }
-
 
 }

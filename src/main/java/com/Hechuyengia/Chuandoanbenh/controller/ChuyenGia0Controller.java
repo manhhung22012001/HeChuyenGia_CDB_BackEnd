@@ -49,12 +49,9 @@ public class ChuyenGia0Controller {
             @RequestParam(value = "anhdaidien", required = false) MultipartFile anhdaidien,
             @RequestParam(value = "bangTotNghiepYKhoa", required = false) MultipartFile bangTotNghiepYKhoa,
             @RequestParam(value = "chungChiHanhNghe", required = false) MultipartFile chungChiHanhNghe,
-            @RequestParam(value = "chungNhanChuyenKhoa", required = false) MultipartFile chungNhanChuyenKhoa,
-            @RequestParam(value = "fullname") String fullname,
-            @RequestParam(value = "phonenumber") String phonenumber,
-            @RequestParam(value = "email") String email) {
-
-        String result = userService.saveUserDetailsAndFiles(userId, anhdaidien, bangTotNghiepYKhoa, chungChiHanhNghe, chungNhanChuyenKhoa, fullname, phonenumber, email);
+            @RequestParam(value = "chungNhanChuyenKhoa", required = false) MultipartFile chungNhanChuyenKhoa){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String result = userService.saveUserDetailsAndFiles(userId, anhdaidien, bangTotNghiepYKhoa, chungChiHanhNghe, chungNhanChuyenKhoa);
         if (result.contains("successfully")) {
             return ResponseEntity.ok(result);
         } else {
