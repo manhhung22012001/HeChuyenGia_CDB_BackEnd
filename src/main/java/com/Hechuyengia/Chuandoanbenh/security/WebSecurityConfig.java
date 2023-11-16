@@ -83,8 +83,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/taskbar-cg/*").authenticated()
                 .antMatchers("/taskbar-cg/trieuchung/*").authenticated()
                 .antMatchers("/taskbar-cg/add-benh-va-trieu-chung/*").authenticated()
+                
                 .antMatchers("/taskbar-cg/getuserdetail/*").authenticated()
                 
+                .antMatchers("/taskbar-cg0/userinfo/*").authenticated()
                 .antMatchers("/taskbar-ks/*").authenticated()
                 
                 .anyRequest().authenticated();

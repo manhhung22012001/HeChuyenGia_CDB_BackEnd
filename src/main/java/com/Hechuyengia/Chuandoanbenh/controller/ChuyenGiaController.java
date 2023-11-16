@@ -14,6 +14,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
 import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -97,16 +98,18 @@ public class ChuyenGiaController {
 
     @CrossOrigin
     @PostMapping("/add-benh-va-trieu-chung/{userId}")
-    public ResponseEntity<HttpStatus> addBenhVaTrieuChung(
+    public Map<String, Object> addBenhVaTrieuChung(
             @PathVariable("userId") Long userId,
             @RequestBody Map<String, Object> requestBody) {
+            Map<String, Object> responseBody = new HashMap<>();
         try {
+            
             String tenBenh = (String) requestBody.get("ten_benh");
             String loaiHe = (String) requestBody.get("loai_he");
-
+            
             // Assuming "trieu_chung" is a list of objects with a "trieu_chung" field
             List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
-
+            
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
 
@@ -119,9 +122,13 @@ public class ChuyenGiaController {
 
             benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, tenTrieuChungList);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+             responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
+
+        return responseBody;
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+             responseBody.put("message", "Error"); // Thêm thông điệp lỗi vào body
+
+        return responseBody;
         }
     }
 
