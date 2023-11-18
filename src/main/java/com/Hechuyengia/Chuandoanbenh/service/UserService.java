@@ -17,11 +17,14 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -85,7 +88,7 @@ public class UserService implements UserDetailsService {
         return repo.getUserInfoById(userId);
     }
 
-   public String saveUserDetailsAndFiles(Long userId, MultipartFile anhdaidien, MultipartFile bangTotNghiepYKhoa, MultipartFile chungChiHanhNghe, MultipartFile chungNhanChuyenKhoa) {
+    public String saveUserDetailsAndFiles(Long userId, MultipartFile anhdaidien, MultipartFile bangTotNghiepYKhoa, MultipartFile chungChiHanhNghe, MultipartFile chungNhanChuyenKhoa) {
         UserEntity user = repo.findById(userId).orElse(null);
 
         if (user != null) {
@@ -95,8 +98,6 @@ public class UserService implements UserDetailsService {
                 String bangTotNghiepYKhoaPath = saveFile(bangTotNghiepYKhoa);
                 String chungChiHanhNghePath = saveFile(chungChiHanhNghe);
                 String chungNhanChuyenKhoaPath = saveFile(chungNhanChuyenKhoa);
-
-                
 
                 // Lưu thông tin vào bảng UserDetailEntity
                 UserDetailEntity userDetail = new UserDetailEntity();
@@ -118,12 +119,25 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    private String saveFile(MultipartFile file) throws IOException {
+      private String saveFile(MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            File dest = new File(uploadPath + fileName);
-            file.transferTo(dest);
-            return dest.getPath();
+            String fullPath = uploadPath + File.separator + fileName;
+
+            // Sử dụng Resource để tạo đường dẫn lưu trữ
+            Resource resource = new UrlResource("file:" + fullPath);
+
+            // Kiểm tra xem thư mục lưu trữ đã tồn tại chưa, nếu chưa thì tạo mới
+            if (!resource.exists()) {
+                File dest = resource.getFile();
+                dest.getParentFile().mkdirs();
+            }
+
+            // Sao chép file vào thư mục lưu trữ
+            FileCopyUtils.copy(file.getBytes(), resource.getFile());
+
+            // Trả về đường dẫn lưu trữ của file
+            return fullPath;
         }
         return null;
     }

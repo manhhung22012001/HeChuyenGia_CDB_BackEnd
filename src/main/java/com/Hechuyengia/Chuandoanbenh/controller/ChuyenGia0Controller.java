@@ -16,8 +16,11 @@ import org.springframework.util.StringUtils;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 /**
  *
@@ -43,19 +47,31 @@ public class ChuyenGia0Controller {
     @Autowired
     UserRepository userRepository;
 
-     @PostMapping("/userinfo/{userId}")
-    public ResponseEntity<String> uploadFilesAndUserInfo(
+    @PostMapping("/userinfo/{userId}")
+    public Map<String, Object> uploadFilesAndUserInfo(
             @PathVariable Long userId,
             @RequestParam(value = "anhdaidien", required = false) MultipartFile anhdaidien,
             @RequestParam(value = "bangTotNghiepYKhoa", required = false) MultipartFile bangTotNghiepYKhoa,
             @RequestParam(value = "chungChiHanhNghe", required = false) MultipartFile chungChiHanhNghe,
-            @RequestParam(value = "chungNhanChuyenKhoa", required = false) MultipartFile chungNhanChuyenKhoa){
+            @RequestParam(value = "chungNhanChuyenKhoa", required = false) MultipartFile chungNhanChuyenKhoa) {
+        Map<String, Object> responseBody = new HashMap<>();
+        try{
+//        System.out.println("UserId: " + userId);
+//        System.out.println("AnhDaiDien: " + (anhdaidien != null ? anhdaidien.getOriginalFilename() : "null"));
+//        System.out.println("BangTotNghiepYKhoa: " + (bangTotNghiepYKhoa != null ? bangTotNghiepYKhoa.getOriginalFilename() : "null"));
+//        System.out.println("ChungChiHanhNghe: " + (chungChiHanhNghe != null ? chungChiHanhNghe.getOriginalFilename() : "null"));
+//        System.out.println("ChungNhanChuyenKhoa: " + (chungNhanChuyenKhoa != null ? chungNhanChuyenKhoa.getOriginalFilename() : "null"));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String result = userService.saveUserDetailsAndFiles(userId, anhdaidien, bangTotNghiepYKhoa, chungChiHanhNghe, chungNhanChuyenKhoa);
-        if (result.contains("successfully")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
+
+          responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
+
+        return responseBody;
+        }
+        catch (Exception e) {
+             responseBody.put("message", "Error"); // Thêm thông điệp lỗi vào body
+
+        return responseBody;
         }
     }
 

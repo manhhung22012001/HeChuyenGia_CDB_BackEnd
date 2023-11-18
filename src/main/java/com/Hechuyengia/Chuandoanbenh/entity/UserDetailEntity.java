@@ -18,7 +18,7 @@ public class UserDetailEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "id_user") // Thêm annotation @JoinColumn
     private UserEntity user;
 
     @Column(name = "bang_tot_nghiep_y_khoa")
@@ -33,9 +33,6 @@ public class UserDetailEntity {
     @Column(name = "image")
     private String image;
 
-    public UserDetailEntity() {
-    }
-
     public UserDetailEntity(Long id, UserEntity user, String bangTotNghiepYKhoa, String chungChiHanhNghe, String chungNhanChuyenKhoa, String image) {
         this.id = id;
         this.user = user;
@@ -43,6 +40,9 @@ public class UserDetailEntity {
         this.chungChiHanhNghe = chungChiHanhNghe;
         this.chungNhanChuyenKhoa = chungNhanChuyenKhoa;
         this.image = image;
+    }
+
+    public UserDetailEntity() {
     }
 
     
