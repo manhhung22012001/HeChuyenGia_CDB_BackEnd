@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 /**
  *
  * @author tranm
  */
 @Service
 public class TrieuChungService {
+
     private final TrieuChungRepository trieuchungRepository;
 
     @Autowired
@@ -25,8 +27,12 @@ public class TrieuChungService {
     public List<Object[]> getTrieuChungWithCountGreaterThanSix() {
         return trieuchungRepository.findTrieuChungWithCountGreaterThanSix();
     }
+
     public List<String> suggestTrieuChung(String keyword) {
         return trieuchungRepository.findByTen_trieu_chungContainingIgnoreCase(keyword);
     }
-   
+
+    public List<Object[]> getTrieuChungonly() {
+        return trieuchungRepository.findTrieuChungonly();
+    }
 }

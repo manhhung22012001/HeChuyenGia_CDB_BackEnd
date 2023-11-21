@@ -4,24 +4,57 @@
  */
 package com.Hechuyengia.Chuandoanbenh.controller;
 
+
+import com.Hechuyengia.Chuandoanbenh.entity.UserDetailEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
+
+import com.Hechuyengia.Chuandoanbenh.repository.UserDetailRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
+import com.Hechuyengia.Chuandoanbenh.service.FileService;
+import com.Hechuyengia.Chuandoanbenh.service.UserService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -34,6 +67,18 @@ public class QuanTriVienController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserDetailRepository userDetailRepository;
+    private final FileService fileService;
+
+    public QuanTriVienController(FileService fileService) {
+        this.fileService = fileService;
+    }
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    UserService userService;
 
     @CrossOrigin
     @GetMapping("/getall")
@@ -77,4 +122,44 @@ public class QuanTriVienController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+  @GetMapping("/getFile/{userId}")
+    public ResponseEntity<?> getUserFiles(
+            @PathVariable Long userId,
+            @RequestParam(value = "user_Id") Long user_Id
+    ) {
+        try {
+            Optional<UserEntity> existingUser = userRepository.findById(userId);
+            if (existingUser.isPresent()) {
+                UserDetailEntity userDetail = userService.getUserDetail(user_Id);
+
+                if (userDetail != null) {
+                    Map<String, String> responseBody = new HashMap<>();
+
+                    // Sử dụng FileService để thực hiện việc thêm file vào response body
+                    fileService.addFileToResponse("anhdaidien", userDetail.getImage(), responseBody);
+                    fileService.addFileToResponse("bangTotNghiepYKhoa", userDetail.getBangTotNghiepYKhoa(), responseBody);
+                    fileService.addFileToResponse("chungChiHanhNghe", userDetail.getChungChiHanhNghe(), responseBody);
+                    fileService.addFileToResponse("chungNhanChuyenKhoa", userDetail.getChungNhanChuyenKhoa(), responseBody);
+
+                    // Trả về response thành công nếu có file trong response body
+                    if (!responseBody.isEmpty()) {
+                        return ResponseEntity.ok().body(responseBody);
+                    } else {
+                        return ResponseEntity.notFound().build();
+                    }
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+
 }

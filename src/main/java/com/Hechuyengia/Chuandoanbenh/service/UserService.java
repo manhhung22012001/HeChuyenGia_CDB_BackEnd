@@ -12,6 +12,8 @@ import com.Hechuyengia.Chuandoanbenh.repository.UserDetailRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -119,7 +121,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-      private String saveFile(MultipartFile file) throws IOException {
+    private String saveFile(MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             String fullPath = uploadPath + File.separator + fileName;
@@ -141,5 +143,11 @@ public class UserService implements UserDetailsService {
         }
         return null;
     }
+
+    public UserDetailEntity getUserDetail(Long userId) {
+        return userDetailRepository.findByUserId(userId);
+    }
+
+
 
 }

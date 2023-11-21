@@ -40,7 +40,12 @@ public class DiagnosisController {
         List<Object[]> trieuchungResults = trieuchungService.getTrieuChungWithCountGreaterThanSix();
         return ResponseEntity.ok(trieuchungResults);
     }
-    
+    @CrossOrigin
+    @PostMapping("/search11") // 
+    public ResponseEntity<List<Object[]>> getTrieuChungonly() {
+        List<Object[]> trieuchungResults = trieuchungService.getTrieuChungonly();
+        return ResponseEntity.ok(trieuchungResults);
+    }
     @CrossOrigin
     @PostMapping("/search2")
     public ResponseEntity<List<TrieuChungEntity>> searchDiagnosis(@RequestBody List<String> selectedSymptomCodes) {
