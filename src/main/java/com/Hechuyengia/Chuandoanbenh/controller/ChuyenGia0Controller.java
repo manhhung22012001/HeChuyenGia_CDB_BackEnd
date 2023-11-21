@@ -54,7 +54,7 @@ public class ChuyenGia0Controller {
             @RequestParam(value = "bangTotNghiepYKhoa", required = false) MultipartFile bangTotNghiepYKhoa,
             @RequestParam(value = "chungChiHanhNghe", required = false) MultipartFile chungChiHanhNghe,
             @RequestParam(value = "chungNhanChuyenKhoa", required = false) MultipartFile chungNhanChuyenKhoa,
-            @RequestParam(value = "hocham", required = false) String hoc_ham,
+            @RequestParam(value = "hoc_ham", required = false) String hoc_ham,
             @RequestParam(value = "hoc_vi", required = false) String hoc_vi
     ) {
         Map<String, Object> responseBody = new HashMap<>();

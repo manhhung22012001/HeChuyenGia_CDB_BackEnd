@@ -121,6 +121,9 @@ public class QuanTriVienController {
                     fileService.addFileToResponse("bangTotNghiepYKhoa", userDetail.getBangTotNghiepYKhoa(), responseBody);
                     fileService.addFileToResponse("chungChiHanhNghe", userDetail.getChungChiHanhNghe(), responseBody);
                     fileService.addFileToResponse("chungNhanChuyenKhoa", userDetail.getChungNhanChuyenKhoa(), responseBody);
+                    // Include hocham and hoc_vi fields in the response
+                    responseBody.put("hoc_ham", userDetail.getHoc_ham());
+                    responseBody.put("hoc_vi", userDetail.getHoc_vi());
 
                     // Trả về response thành công nếu có file trong response body
                     if (!responseBody.isEmpty()) {
