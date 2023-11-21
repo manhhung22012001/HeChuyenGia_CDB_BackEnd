@@ -32,15 +32,27 @@ public class UserDetailEntity {
     
     @Column(name = "image")
     private String image;
+    
+    @Column(name = "hoc_ham")
+    private String hoc_ham;
+    
+    @Column(name = "hoc_vi")
+    private String hoc_vi;
 
-    public UserDetailEntity(Long id, UserEntity user, String bangTotNghiepYKhoa, String chungChiHanhNghe, String chungNhanChuyenKhoa, String image) {
+    public UserDetailEntity(Long id, UserEntity user, String bangTotNghiepYKhoa, String chungChiHanhNghe, String chungNhanChuyenKhoa, String image, String hoc_ham, String hoc_vi) {
         this.id = id;
         this.user = user;
         this.bangTotNghiepYKhoa = bangTotNghiepYKhoa;
         this.chungChiHanhNghe = chungChiHanhNghe;
         this.chungNhanChuyenKhoa = chungNhanChuyenKhoa;
         this.image = image;
+        this.hoc_ham = hoc_ham;
+        this.hoc_vi = hoc_vi;
     }
+
+
+    
+
 
     public UserDetailEntity() {
     }
@@ -93,6 +105,22 @@ public class UserDetailEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getHoc_ham() {
+        return hoc_ham;
+    }
+
+    public void setHoc_ham(String hoc_ham) {
+        this.hoc_ham = hoc_ham;
+    }
+
+    public String getHoc_vi() {
+        return hoc_vi;
+    }
+
+    public void setHoc_vi(String hoc_vi) {
+        this.hoc_vi = hoc_vi;
     }
     
     

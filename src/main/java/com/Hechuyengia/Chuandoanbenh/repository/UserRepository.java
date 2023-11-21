@@ -31,6 +31,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     public boolean existsByPhonenumber(String phonenumber);
 
-    @Query("SELECT new com.Hechuyengia.Chuandoanbenh.DTO.UserInfoDTO(u.id_user, u.username, u.fullname, u.phonenumber, u.role, u.email, u.status, u.userDetail.bangTotNghiepYKhoa, u.userDetail.chungChiHanhNghe, u.userDetail.chungNhanChuyenKhoa, u.userDetail.image) FROM UserEntity u LEFT JOIN u.userDetail WHERE u.id_user = :userId")
+    @Query("SELECT new com.Hechuyengia.Chuandoanbenh.DTO.UserInfoDTO(u.id_user, u.username, u.fullname, u.phonenumber, u.role, u.email, u.status, u.userDetail.bangTotNghiepYKhoa, u.userDetail.chungChiHanhNghe, u.userDetail.chungNhanChuyenKhoa, u.userDetail.image, u.userDetail.hoc_ham, u.userDetail.hoc_vi) FROM UserEntity u LEFT JOIN u.userDetail WHERE u.id_user = :userId")
     UserInfoDTO getUserInfoById(@Param("userId") Long userId);
+
 }

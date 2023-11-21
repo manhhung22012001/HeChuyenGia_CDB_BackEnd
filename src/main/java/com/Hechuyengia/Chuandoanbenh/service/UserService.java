@@ -90,7 +90,7 @@ public class UserService implements UserDetailsService {
         return repo.getUserInfoById(userId);
     }
 
-    public String saveUserDetailsAndFiles(Long userId, MultipartFile anhdaidien, MultipartFile bangTotNghiepYKhoa, MultipartFile chungChiHanhNghe, MultipartFile chungNhanChuyenKhoa) {
+    public String saveUserDetailsAndFiles(Long userId, MultipartFile anhdaidien, MultipartFile bangTotNghiepYKhoa, MultipartFile chungChiHanhNghe, MultipartFile chungNhanChuyenKhoa,String hoc_ham, String hoc_vi) {
         UserEntity user = repo.findById(userId).orElse(null);
 
         if (user != null) {
@@ -108,6 +108,8 @@ public class UserService implements UserDetailsService {
                 userDetail.setChungChiHanhNghe(chungChiHanhNghePath);
                 userDetail.setChungNhanChuyenKhoa(chungNhanChuyenKhoaPath);
                 userDetail.setImage(anhdaidienPath);
+                userDetail.setHoc_vi(hoc_vi);
+                userDetail.setHoc_ham(hoc_ham);
 
                 userDetailRepository.save(userDetail);
 
@@ -147,7 +149,5 @@ public class UserService implements UserDetailsService {
     public UserDetailEntity getUserDetail(Long userId) {
         return userDetailRepository.findByUserId(userId);
     }
-
-
 
 }

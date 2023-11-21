@@ -20,8 +20,10 @@ public class UserInfoDTO {
     private String chungChiHanhNghe;
     private String chungNhanChuyenKhoa;
     private String image;
+    private String hoc_ham;
+    private String hoc_vi;
 
-    public UserInfoDTO(Long id_user, String username, String fullname, String phonenumber, String role, String email, String status, String bangTotNghiepYKhoa, String chungChiHanhNghe, String chungNhanChuyenKhoa, String image) {
+    public UserInfoDTO(Long id_user, String username, String fullname, String phonenumber, String role, String email, String status, String bangTotNghiepYKhoa, String chungChiHanhNghe, String chungNhanChuyenKhoa, String image, String hoc_ham, String hoc_vi) {
         this.id_user = id_user;
         this.username = username;
         this.fullname = fullname;
@@ -33,7 +35,27 @@ public class UserInfoDTO {
         this.chungChiHanhNghe = chungChiHanhNghe;
         this.chungNhanChuyenKhoa = chungNhanChuyenKhoa;
         this.image = image;
+        this.hoc_ham = hoc_ham;
+        this.hoc_vi = hoc_vi;
     }
+
+    public String getHoc_ham() {
+        return hoc_ham;
+    }
+
+    public void setHoc_ham(String hoc_ham) {
+        this.hoc_ham = hoc_ham;
+    }
+
+    public String getHoc_vi() {
+        return hoc_vi;
+    }
+
+    public void setHoc_vi(String hoc_vi) {
+        this.hoc_vi = hoc_vi;
+    }
+
+   
 
     public UserInfoDTO() {
     }
