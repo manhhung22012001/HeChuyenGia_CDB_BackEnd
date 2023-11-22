@@ -9,7 +9,7 @@ package com.Hechuyengia.Chuandoanbenh.security;
  * @author tranm
  */
 class LoginRequest {
-      private String username;
+    private String username;
     private String password;
 
     public LoginRequest() {

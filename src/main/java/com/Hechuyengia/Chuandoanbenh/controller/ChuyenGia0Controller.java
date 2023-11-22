@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 @RequestMapping("/taskbar-cg0")
 public class ChuyenGia0Controller {
 
-    private final String uploadPath = "src/main/resources/Image/";
+    
 
     @Autowired
     UserService userService;

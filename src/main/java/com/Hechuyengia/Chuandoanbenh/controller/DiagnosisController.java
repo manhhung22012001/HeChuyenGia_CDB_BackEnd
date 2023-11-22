@@ -6,12 +6,18 @@ package com.Hechuyengia.Chuandoanbenh.controller;
 
 import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
+import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.service.DiagnosisService;
 import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +39,8 @@ public class DiagnosisController {
     }
     @Autowired
     private TrieuChungService trieuchungService;
-    
+    @Autowired
+    BenhRepository benhRepository;
     @CrossOrigin
     @PostMapping("/search1") // 
     public ResponseEntity<List<Object[]>> getTrieuChungWithCountGreaterThanSix() {
@@ -67,6 +74,17 @@ public class DiagnosisController {
         List<BenhEntity> findSymptomsInSelectedBenh1 = diagnosisService.getSymptomsInSelectedBenh1(danh_sach_tc);
         return ResponseEntity.ok(findSymptomsInSelectedBenh1);
         
+    }
+    @CrossOrigin
+    @GetMapping("/trieuchung/{ma_benh}")
+    public ResponseEntity<List<Object[]>> getTrieuChungByMaBenh(@PathVariable int ma_benh) {
+        
+        List<Object[]> trieuchung = benhRepository.findTrieuChungByMaBenh(ma_benh);
+        if (trieuchung != null && !trieuchung.isEmpty()) {
+            return ResponseEntity.ok(trieuchung);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
      
 }

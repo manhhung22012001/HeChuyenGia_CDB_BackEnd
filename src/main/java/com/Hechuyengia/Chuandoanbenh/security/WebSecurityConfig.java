@@ -86,12 +86,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/*").permitAll()//allow login api for all
                 .antMatchers("/diagnosis/*").permitAll()
+                .antMatchers("/diagnosis/trieuchung/*").permitAll()
                 
                 .antMatchers("/taskbar-qtv/*").authenticated()
                 .antMatchers("/taskbar-qtv/delete/*").authenticated()
                 .antMatchers("/taskbar-qtv/edit/*").authenticated()
 //                .antMatchers("/taskbar-qtv/getFile/*").authenticated()
-                .antMatchers("/taskbar-qtv/getFile/*").permitAll()
+                .antMatchers("/taskbar-qtv/getFile/*").authenticated()
                 
                 .antMatchers("/taskbar-cg/*").authenticated()
                 .antMatchers("/taskbar-cg/trieuchung/*").authenticated()

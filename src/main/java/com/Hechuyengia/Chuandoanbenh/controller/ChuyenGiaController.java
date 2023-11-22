@@ -84,17 +84,7 @@ public class ChuyenGiaController {
         return ResponseEntity.ok(result);
     }
 
-    @CrossOrigin
-    @GetMapping("/trieuchung/{ma_benh}")
-    public ResponseEntity<List<Object[]>> getTrieuChungByMaBenh(@PathVariable int ma_benh) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<Object[]> trieuchung = benhRepository.findTrieuChungByMaBenh(ma_benh);
-        if (trieuchung != null && !trieuchung.isEmpty()) {
-            return ResponseEntity.ok(trieuchung);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
+    
 
     @CrossOrigin
     @PostMapping("/add-benh-va-trieu-chung/{userId}")
