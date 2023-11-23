@@ -92,7 +92,7 @@ public class QuanTriVienController {
     }
     @GetMapping("/trieuchungmoi/{ma_benh_moi}")
     public ResponseEntity<List<Object[]>> getTrieuChungMoiByMaBenhMoi(@PathVariable int ma_benh_moi) {
-        
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<Object[]> trieuchungmoi = benhMoiRepository.findTrieuChungMoiByMaBenhMoi(ma_benh_moi);
         if (trieuchungmoi != null && !trieuchungmoi.isEmpty()) {
             return ResponseEntity.ok(trieuchungmoi);

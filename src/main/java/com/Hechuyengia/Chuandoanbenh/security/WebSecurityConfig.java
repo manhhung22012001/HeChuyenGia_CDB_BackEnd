@@ -93,6 +93,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/taskbar-qtv/edit/*").authenticated()
 //                .antMatchers("/taskbar-qtv/getFile/*").authenticated()
                 .antMatchers("/taskbar-qtv/getFile/*").authenticated()
+                .antMatchers("/taskbar-qtv/trieuchungmoi/*").authenticated()
+                
                 
                 .antMatchers("/taskbar-cg/*").authenticated()
                 .antMatchers("/taskbar-cg/trieuchung/*").authenticated()
