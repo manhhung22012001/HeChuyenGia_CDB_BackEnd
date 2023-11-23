@@ -31,6 +31,9 @@ public class BenhMoiEntity implements Serializable{
     @Column(name = "loai_he")
     private String loai_he;
     
+    @Column(name = "trang_thai")
+    private String trang_thai; 
+    
     @ManyToOne
     @JoinColumn(name = "id_user")
     private UserEntity userEntity; // Định nghĩa mối quan hệ với bảng người dùng
@@ -38,12 +41,15 @@ public class BenhMoiEntity implements Serializable{
     public BenhMoiEntity() {
     }
 
-    public BenhMoiEntity(int ma_benh_moi, String ten_benh_moi, String loai_he, UserEntity userEntity) {
+    public BenhMoiEntity(int ma_benh_moi, String ten_benh_moi, String loai_he, String trang_thai, UserEntity userEntity) {
         this.ma_benh_moi = ma_benh_moi;
         this.ten_benh_moi = ten_benh_moi;
         this.loai_he = loai_he;
+        this.trang_thai = trang_thai;
         this.userEntity = userEntity;
     }
+
+    
 
    
 
@@ -77,6 +83,14 @@ public class BenhMoiEntity implements Serializable{
 
     public void setLoai_he(String loai_he) {
         this.loai_he = loai_he;
+    }
+
+    public String getTrang_thai() {
+        return trang_thai;
+    }
+
+    public void setTrang_thai(String trang_thai) {
+        this.trang_thai = trang_thai;
     }
     
     

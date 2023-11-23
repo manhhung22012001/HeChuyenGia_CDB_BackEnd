@@ -34,13 +34,14 @@ public class BenhMoiService {
     TrieuChungBenhMoiRepository trieuChungBenhMoiRepository;
 
     @Transactional
-    public void saveBenhVaTrieuChung(UserEntity userEntity, String loaiHe, String tenBenh, List<String> trieuChungList) {
+    public void saveBenhVaTrieuChung(UserEntity userEntity, String loaiHe, String tenBenh, List<String> trieuChungList, String trang_thai) {
         try {
             // Tạo mới đối tượng BenhMoiEntity và lưu vào bảng bệnh mới
             BenhMoiEntity benhMoiEntity = new BenhMoiEntity();
             benhMoiEntity.setTen_benh_moi(tenBenh);
             benhMoiEntity.setLoai_he(loaiHe);
             benhMoiEntity.setUserEntity(userEntity);
+            benhMoiEntity.setLoai_he(loaiHe);
             BenhMoiEntity savedBenh = benhMoiRepository.save(benhMoiEntity);
 
             // Lưu triệu chứng và liên kết với bệnh vừa tạo
