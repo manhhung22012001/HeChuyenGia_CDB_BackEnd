@@ -41,7 +41,7 @@ public class BenhMoiService {
             benhMoiEntity.setTen_benh_moi(tenBenh);
             benhMoiEntity.setLoai_he(loaiHe);
             benhMoiEntity.setUserEntity(userEntity);
-            benhMoiEntity.setLoai_he(loaiHe);
+            benhMoiEntity.setTrang_thai(trang_thai);
             BenhMoiEntity savedBenh = benhMoiRepository.save(benhMoiEntity);
 
             // Lưu triệu chứng và liên kết với bệnh vừa tạo
