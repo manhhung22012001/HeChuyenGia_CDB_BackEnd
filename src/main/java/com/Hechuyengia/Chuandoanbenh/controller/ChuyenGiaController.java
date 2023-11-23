@@ -125,7 +125,7 @@ public class ChuyenGiaController {
     @CrossOrigin
     @GetMapping("/suggest")
     public ResponseEntity<List<String>> suggestTrieuChung(@RequestParam("keyword") String keyword) {
-        System.out.println("Keywork nhan duoc la: "+keyword);
+        //System.out.println("Keywork nhan duoc la: "+keyword);
 //        keyword = "%" + keyword + "%";
         List<String> suggestedTrieuChung = trieuchungService.suggestTrieuChung(keyword);
         return ResponseEntity.ok(suggestedTrieuChung);

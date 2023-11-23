@@ -5,8 +5,12 @@
 package com.Hechuyengia.Chuandoanbenh.controller;
 
 
+import com.Hechuyengia.Chuandoanbenh.entity.BenhMoiEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserDetailEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
+import com.Hechuyengia.Chuandoanbenh.repository.BenhMoiRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 
 import com.Hechuyengia.Chuandoanbenh.repository.UserDetailRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
@@ -49,6 +53,12 @@ public class QuanTriVienController {
     UserRepository userRepository;
     @Autowired
     UserDetailRepository userDetailRepository;
+    @Autowired
+    TrieuChungRepository trieuChungRepository;
+    @Autowired
+    BenhMoiRepository benhMoiRepository;
+    
+
     private final FileService fileService;
 
     public QuanTriVienController(FileService fileService) {
@@ -66,7 +76,30 @@ public class QuanTriVienController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findAll();
     }
+    
+    @GetMapping("/getallTrieuChungCu")
+    public List<TrieuChungEntity> listTC() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        return trieuChungRepository.findAll();
+    }
+    
+    @GetMapping("/getallBenhMoi")
+    public List<BenhMoiEntity> listBenh() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return benhMoiRepository.findAll();
+    }
+    @GetMapping("/trieuchungmoi/{ma_benh_moi}")
+    public ResponseEntity<List<Object[]>> getTrieuChungMoiByMaBenhMoi(@PathVariable int ma_benh_moi) {
+        
+        List<Object[]> trieuchungmoi = benhMoiRepository.findTrieuChungMoiByMaBenhMoi(ma_benh_moi);
+        if (trieuchungmoi != null && !trieuchungmoi.isEmpty()) {
+            return ResponseEntity.ok(trieuchungmoi);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
     // API để xóa một người dùng theo ID
     @CrossOrigin
     @DeleteMapping("/delete/{id}")

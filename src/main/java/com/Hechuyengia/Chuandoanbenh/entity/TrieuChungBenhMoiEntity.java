@@ -37,7 +37,7 @@ public class TrieuChungBenhMoiEntity implements Serializable{
         this.trieuChungMoi = trieuChungMoi;
         this.benhMoi = benhMoi;
     }
-
+    
     public TrieuChungMoiEntity getTrieuChungMoi() {
         return trieuChungMoi;
     }
