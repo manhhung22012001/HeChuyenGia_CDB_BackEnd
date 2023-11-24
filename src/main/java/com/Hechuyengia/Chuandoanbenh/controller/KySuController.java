@@ -54,14 +54,16 @@ public class KySuController {
     ) {
         Optional<UserEntity> existingUser = userRepository.findById(userId);
         Map<String, Object> responseBody = new HashMap<>();
-        System.out.println("Ds "+ ten_trieu_chung);
+        System.out.println("Ds " + ten_trieu_chung);
         if (existingUser.isPresent()) {
-            List<Long> existingTrieuChung = trieuChungRepository.findMaTrieuChungByTenTrieuChungIn(ten_trieu_chung);
             List<Long> maTrieuChungList = new ArrayList<>();
-            System.out.println("Ds ma tim duoc "+ existingTrieuChung);
-            for (Long tc : existingTrieuChung) {
-                maTrieuChungList.add(tc); // Thêm mã triệu chứng vào danh sách
-                System.out.println("Ds ma "+ maTrieuChungList);
+            for (String ten : ten_trieu_chung) {
+                Long maTrieuChung = trieuChungRepository.findMaTrieuChungByTenTrieuChung(ten);
+                if (maTrieuChung != null) {
+                    maTrieuChungList.add(maTrieuChung);
+                } else {
+                    maTrieuChungList.add(null); // Thêm mã null vào danh sách
+                }
             }
             responseBody.put("message", maTrieuChungList);
         } else {
