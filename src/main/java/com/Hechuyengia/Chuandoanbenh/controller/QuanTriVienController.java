@@ -191,44 +191,45 @@ public class QuanTriVienController {
     }
 
     @PutMapping("/edit-benh-moi-va-trieu-chung-moi/{userId}")
-    public ResponseEntity<List<TrieuChungMoiEntity>> editBenhVaTrieuChung(
+    public Map<String, Object> editBenhVaTrieuChung(
             @PathVariable("userId") Long userId,
-            @RequestBody List<Map<String, Object>> editInfoList) {
-        System.out.println("nhận được: "+editInfoList);
+            @RequestBody Map<String, Object> editInfo) {
+        Map<String, Object> responseBody = new HashMap<>();
+        System.out.println("Nhan duoc " + editInfo);
+        Long ma_trieu_chung_moi = Long.valueOf(editInfo.get("ma_trieu_chung_moi").toString());
+        Long ma_benh_moi = Long.valueOf(editInfo.get("ma_benh_moi").toString());
+        String ten_trieu_chung_moi = (String) editInfo.get("ten_trieu_chung_moi");
+        String trang_thai = (String) editInfo.get("trang_thai");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<UserEntity> existingUser = userRepository.findById(userId);
         if (existingUser.isPresent()) {
-            List<TrieuChungMoiEntity> updatedTrieuChungs = new ArrayList<>();
+            Optional<TrieuChungMoiEntity> existingTrieuChungMoi = trieuChungMoiRepository.findById(ma_trieu_chung_moi);
+            if (existingTrieuChungMoi.isPresent()) {
+                TrieuChungMoiEntity trieuChungToUpDate = existingTrieuChungMoi.get();
+                trieuChungToUpDate.setTen_trieu_chung_moi(ten_trieu_chung_moi);
 
-            for (Map<String, Object> editInfo : editInfoList) {
-                Long maTrieuChungMoi = Long.parseLong(editInfo.get("maTrieuChungMoi").toString());
-                String tenTrieuChungMoi = editInfo.get("tenTrieuChungMoi").toString();
-                Long maBenhMoi = Long.parseLong(editInfo.get("maBenhMoi").toString());
-                String trangThai = editInfo.get("trangThai").toString();
+                TrieuChungMoiEntity saveTrieuChungMoi = trieuChungMoiRepository.save(trieuChungToUpDate);
 
-                Optional<TrieuChungMoiEntity> existingTrieuChungMoi = trieuChungMoiRepository.findById(maTrieuChungMoi);
-                if (existingTrieuChungMoi.isPresent()) {
-                    TrieuChungMoiEntity trieuChungToUpDate = existingTrieuChungMoi.get();
-                    trieuChungToUpDate.setTen_trieu_chung_moi(tenTrieuChungMoi);
-                    
-                    TrieuChungMoiEntity saveTrieuChungMoi = trieuChungMoiRepository.save(trieuChungToUpDate);
-                    updatedTrieuChungs.add(saveTrieuChungMoi);
-                    Optional<BenhMoiEntity> existingBenhMoi = benhMoiRepository.findById(maBenhMoi);
-                    if(existingBenhMoi.isPresent()){
-                        BenhMoiEntity benhMoiToUpDate = existingBenhMoi.get();
-                        benhMoiToUpDate.setTrang_thai(trangThai);
-                        
-                        BenhMoiEntity saveTrangThaiMoi = benhMoiRepository.save(benhMoiToUpDate);
-                        
-                    }
+                Optional<BenhMoiEntity> existingBenhMoi = benhMoiRepository.findById(ma_benh_moi);
+                if (existingBenhMoi.isPresent()) {
+                    BenhMoiEntity benhMoiToUpDate = existingBenhMoi.get();
+                    benhMoiToUpDate.setTrang_thai(trang_thai);
+
+                    BenhMoiEntity saveTrangThaiMoi = benhMoiRepository.save(benhMoiToUpDate);
                 }
-            }
 
-            return ResponseEntity.ok(updatedTrieuChungs);
+                responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
+
+                return responseBody;    
+            } else {
+                responseBody.put("message", "Error"); // Thêm thông điệp lỗi vào body
+            }
         } else {
-            // Xử lý trường hợp không tìm thấy người dùng
-            return ResponseEntity.notFound().build();
+            // Xử lý khi không tìm thấy người dùng
+            responseBody.put("message", "KHONG CÓ User"); // Thêm thông điệp lỗi vào body
         }
+        return null;
     }
 
 }

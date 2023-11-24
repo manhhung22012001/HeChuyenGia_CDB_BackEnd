@@ -138,7 +138,26 @@
             <version>5.3.30</version> <!-- Đảm bảo bạn sử dụng phiên bản phù hợp với phiên bản Spring Framework của bạn -->
             <type>jar</type>
         </dependency>
-        
+        <!-- Jackson Databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.13.0</version> <!-- Điều chỉnh phiên bản tại đây -->
+        </dependency>
+
+        <!-- Jackson Core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+
+        <!-- Jackson Annotations -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.13.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -17,10 +17,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "trieu_chung_moi")
 public class TrieuChungMoiEntity implements Serializable{
-     @Id
+    
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ma_trieu_chung_moi")
-    private int ma_trieu_chung_moi;
+    private Long ma_trieu_chung_moi;
     
     @Column(name = "ten_trieu_chung_moi")
     private String ten_trieu_chung_moi;
@@ -28,18 +29,20 @@ public class TrieuChungMoiEntity implements Serializable{
     public TrieuChungMoiEntity() {
     }
 
-    public TrieuChungMoiEntity(int ma_trieu_chung_moi, String ten_trieu_chung_moi) {
+    public TrieuChungMoiEntity(Long ma_trieu_chung_moi, String ten_trieu_chung_moi) {
         this.ma_trieu_chung_moi = ma_trieu_chung_moi;
         this.ten_trieu_chung_moi = ten_trieu_chung_moi;
     }
 
-    public int getMa_trieu_chung_moi() {
+    public Long getMa_trieu_chung_moi() {
         return ma_trieu_chung_moi;
     }
 
-    public void setMa_trieu_chung_moi(int ma_trieu_chung_moi) {
+    public void setMa_trieu_chung_moi(Long ma_trieu_chung_moi) {
         this.ma_trieu_chung_moi = ma_trieu_chung_moi;
     }
+
+    
 
     public String getTen_trieu_chung_moi() {
         return ten_trieu_chung_moi;

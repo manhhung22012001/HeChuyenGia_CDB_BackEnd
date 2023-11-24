@@ -23,7 +23,7 @@ public class BenhMoiEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ma_benh_moi")
-    private int ma_benh_moi;
+    private Long ma_benh_moi;
     
     @Column(name = "ten_benh_moi")
     private String ten_benh_moi;
@@ -41,7 +41,7 @@ public class BenhMoiEntity implements Serializable{
     public BenhMoiEntity() {
     }
 
-    public BenhMoiEntity(int ma_benh_moi, String ten_benh_moi, String loai_he, String trang_thai, UserEntity userEntity) {
+    public BenhMoiEntity(Long ma_benh_moi, String ten_benh_moi, String loai_he, String trang_thai, UserEntity userEntity) {
         this.ma_benh_moi = ma_benh_moi;
         this.ten_benh_moi = ten_benh_moi;
         this.loai_he = loai_he;
@@ -49,17 +49,15 @@ public class BenhMoiEntity implements Serializable{
         this.userEntity = userEntity;
     }
 
-    
-
-   
-
-    public int getMa_benh_moi() {
+    public Long getMa_benh_moi() {
         return ma_benh_moi;
     }
 
-    public void setMa_benh_moi(int ma_benh_moi) {
+    public void setMa_benh_moi(Long ma_benh_moi) {
         this.ma_benh_moi = ma_benh_moi;
     }
+
+ 
 
     public String getTen_benh_moi() {
         return ten_benh_moi;
