@@ -193,25 +193,34 @@ public class QuanTriVienController {
     @PutMapping("/edit-benh-moi-va-trieu-chung-moi/{userId}")
     public ResponseEntity<List<TrieuChungMoiEntity>> editBenhVaTrieuChung(
             @PathVariable("userId") Long userId,
-            @RequestBody List<Map<String, Object>> trieuChungList) {
+            @RequestBody List<Map<String, Object>> editInfoList) {
+        System.out.println("nhận được: "+editInfoList);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<UserEntity> existingUser = userRepository.findById(userId);
-        System.out.println("Danh sách nhận được: "+trieuChungList);
-                
         if (existingUser.isPresent()) {
             List<TrieuChungMoiEntity> updatedTrieuChungs = new ArrayList<>();
 
-            for (Map<String, Object> trieuChung : trieuChungList) {
-                Long maTrieuChungMoi = Long.parseLong(trieuChung.get("maTrieuChungMoi").toString());
-                String tenTrieuChungMoi = trieuChung.get("tenTrieuChungMoi").toString();
+            for (Map<String, Object> editInfo : editInfoList) {
+                Long maTrieuChungMoi = Long.parseLong(editInfo.get("maTrieuChungMoi").toString());
+                String tenTrieuChungMoi = editInfo.get("tenTrieuChungMoi").toString();
+                Long maBenhMoi = Long.parseLong(editInfo.get("maBenhMoi").toString());
+                String trangThai = editInfo.get("trangThai").toString();
 
                 Optional<TrieuChungMoiEntity> existingTrieuChungMoi = trieuChungMoiRepository.findById(maTrieuChungMoi);
                 if (existingTrieuChungMoi.isPresent()) {
                     TrieuChungMoiEntity trieuChungToUpDate = existingTrieuChungMoi.get();
                     trieuChungToUpDate.setTen_trieu_chung_moi(tenTrieuChungMoi);
-
+                    
                     TrieuChungMoiEntity saveTrieuChungMoi = trieuChungMoiRepository.save(trieuChungToUpDate);
                     updatedTrieuChungs.add(saveTrieuChungMoi);
+                    Optional<BenhMoiEntity> existingBenhMoi = benhMoiRepository.findById(maBenhMoi);
+                    if(existingBenhMoi.isPresent()){
+                        BenhMoiEntity benhMoiToUpDate = existingBenhMoi.get();
+                        benhMoiToUpDate.setTrang_thai(trangThai);
+                        
+                        BenhMoiEntity saveTrangThaiMoi = benhMoiRepository.save(benhMoiToUpDate);
+                        
+                    }
                 }
             }
 
