@@ -99,7 +99,7 @@ public class QuanTriVienController {
 
     @GetMapping("/trieuchungmoi/{userId}")
     public ResponseEntity<List<Object[]>> getTrieuChungMoiByMaBenhMoi(@PathVariable Long userId,
-            @RequestParam(value = "ma_benh_moi") int ma_benh_moi) {
+            @RequestParam(value = "ma_benh_moi") Long ma_benh_moi) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<UserEntity> existingUser = userRepository.findById(userId);
         if (existingUser.isPresent()) {

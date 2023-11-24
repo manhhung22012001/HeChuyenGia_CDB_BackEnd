@@ -18,5 +18,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BenhMoiRepository extends JpaRepository<BenhMoiEntity, Long>{
     @Query("SELECT tcb.trieuChungMoi.ma_trieu_chung_moi, tcb.trieuChungMoi.ten_trieu_chung_moi FROM TrieuChungBenhMoiEntity tcb WHERE tcb.benhMoi.ma_benh_moi = :ma_benh_moi")
-    List<Object[]> findTrieuChungMoiByMaBenhMoi(@Param("ma_benh_moi") int ma_benh_moi);
+    List<Object[]> findTrieuChungMoiByMaBenhMoi(@Param("ma_benh_moi") Long ma_benh_moi);
 }
