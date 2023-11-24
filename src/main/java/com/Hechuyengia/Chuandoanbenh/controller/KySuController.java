@@ -50,7 +50,7 @@ public class KySuController {
     @GetMapping("/checkTC/{userId}")
     public Map<String, Object> CheckTc(
             @PathVariable Long userId,
-            @RequestParam(value = "ten_trieu_chung") List<String> ten_trieu_chung
+            @RequestParam(value = "ten_trieu_chung") String ten_trieu_chung
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<UserEntity> existingUser = userRepository.findById(userId);
@@ -58,7 +58,8 @@ public class KySuController {
         System.out.println("Ds " + ten_trieu_chung);
         if (existingUser.isPresent()) {
             List<Long> maTrieuChungList = new ArrayList<>();
-            for (String ten : ten_trieu_chung) {
+            String[] ten_trieu_chung_array = ten_trieu_chung.split("(?=\\p{Lu})"); // Ngắt xâu theo chữ cái in hoa ở đầu
+            for (String ten : ten_trieu_chung_array) {
                 Long maTrieuChung = trieuChungRepository.findMaTrieuChungByTenTrieuChung(ten);
                 if (maTrieuChung != null) {
                     maTrieuChungList.add(maTrieuChung);
