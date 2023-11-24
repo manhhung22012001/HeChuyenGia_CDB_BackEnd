@@ -47,7 +47,10 @@ public class KySuController {
         this.userService = userService;
     }
 
-   @GetMapping("/checkTC/{userId}")
+
+  
+
+    @GetMapping("/checkTC/{userId}")
 public Map<String, Object> CheckTc(
         @PathVariable Long userId,
         @RequestParam(value = "ten_trieu_chung") String ten_trieu_chung
@@ -73,5 +76,4 @@ public Map<String, Object> CheckTc(
     }
     return responseBody;
 }
-
 }
