@@ -52,6 +52,7 @@ public class KySuController {
             @PathVariable Long userId,
             @RequestParam(value = "ten_trieu_chung") List<String> ten_trieu_chung
     ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<UserEntity> existingUser = userRepository.findById(userId);
         Map<String, Object> responseBody = new HashMap<>();
         System.out.println("Ds " + ten_trieu_chung);

@@ -106,7 +106,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 
                 .antMatchers("/taskbar-cg0/userinfo/*").authenticated()
                 .antMatchers("/taskbar-ks/*").authenticated()
-                .antMatchers("/taskbar-ks/checkTC/*").permitAll()
+                .antMatchers("/taskbar-ks/checkTC/*").authenticated()
                 .anyRequest().authenticated();
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
