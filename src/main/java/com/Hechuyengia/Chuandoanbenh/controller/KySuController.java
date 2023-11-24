@@ -72,7 +72,8 @@ public Map<String, Object> CheckTc(
         }
         responseBody.put("message", maTrieuChungList);
     } else {
-        responseBody.put("message", "User không tồn tại"); // Người dùng không tồn tại
+        
+        responseBody.put("message", "Use không tồn tại"); // Người dùng không tồn tại
     }
     return responseBody;
 }
