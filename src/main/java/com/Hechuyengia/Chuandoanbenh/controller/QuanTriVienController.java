@@ -217,19 +217,21 @@ public class QuanTriVienController {
                     benhMoiToUpDate.setTrang_thai(trang_thai);
 
                     BenhMoiEntity saveTrangThaiMoi = benhMoiRepository.save(benhMoiToUpDate);
+
+                    responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
+                    return responseBody;
+                } else {
+                    responseBody.put("message", "Error: Ma_benh not found "); // Thêm thông điệp lỗi vào body
+                    return responseBody;
                 }
-
-                responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
-
-                return responseBody;    
             } else {
-                responseBody.put("message", "Error"); // Thêm thông điệp lỗi vào body
+                responseBody.put("message", "Error: TrieuChungMoi not found"); // Thêm thông điệp lỗi vào body
+                return responseBody;
             }
         } else {
-            // Xử lý khi không tìm thấy người dùng
-            responseBody.put("message", "KHONG CÓ User"); // Thêm thông điệp lỗi vào body
+            responseBody.put("message", "Error: User not found"); // Thêm thông điệp lỗi vào body
+            return responseBody;
         }
-        return null;
     }
 
 }
