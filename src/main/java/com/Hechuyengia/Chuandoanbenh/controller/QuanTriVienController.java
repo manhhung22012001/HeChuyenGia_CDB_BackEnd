@@ -5,10 +5,13 @@
 package com.Hechuyengia.Chuandoanbenh.controller;
 
 import com.Hechuyengia.Chuandoanbenh.entity.BenhMoiEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungBenhMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserDetailEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhMoiRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungMoiRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 
 import com.Hechuyengia.Chuandoanbenh.repository.UserDetailRepository;
@@ -16,6 +19,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
 import com.Hechuyengia.Chuandoanbenh.service.FileService;
 import com.Hechuyengia.Chuandoanbenh.service.UserService;
+import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +63,8 @@ public class QuanTriVienController {
     BenhMoiRepository benhMoiRepository;
     @Autowired
     BenhMoiService benhMoiService;
+    @Autowired
+    TrieuChungMoiRepository trieuChungMoiRepository;
     private final FileService fileService;
 
     public QuanTriVienController(FileService fileService) {
@@ -184,38 +190,36 @@ public class QuanTriVienController {
         }
     }
 
-    @PostMapping("/add-benh-moi-va-trieu-chung-moi/{userId}")
-    public Map<String, Object> addBenhVaTrieuChung(
+    @PutMapping("/edit-benh-moi-va-trieu-chung-moi/{userId}")
+    public ResponseEntity<List<TrieuChungMoiEntity>> editBenhVaTrieuChung(
             @PathVariable("userId") Long userId,
-            @RequestBody Map<String, Object> requestBody) {
-        Map<String, Object> responseBody = new HashMap<>();
-        try {
+            @RequestBody List<Map<String, Object>> trieuChungList) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<UserEntity> existingUser = userRepository.findById(userId);
+        System.out.println("Danh sách nhận được: "+trieuChungList);
+                
+        if (existingUser.isPresent()) {
+            List<TrieuChungMoiEntity> updatedTrieuChungs = new ArrayList<>();
 
-            String tenBenh = (String) requestBody.get("ten_benh");
-            String loaiHe = (String) requestBody.get("loai_he");
-            String trang_thai = (String) requestBody.get("trang_thai");
-            // Assuming "trieu_chung" is a list of objects with a "trieu_chung" field
-            List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
+            for (Map<String, Object> trieuChung : trieuChungList) {
+                Long maTrieuChungMoi = Long.parseLong(trieuChung.get("maTrieuChungMoi").toString());
+                String tenTrieuChungMoi = trieuChung.get("tenTrieuChungMoi").toString();
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList + "trang thai: " + trang_thai);
+                Optional<TrieuChungMoiEntity> existingTrieuChungMoi = trieuChungMoiRepository.findById(maTrieuChungMoi);
+                if (existingTrieuChungMoi.isPresent()) {
+                    TrieuChungMoiEntity trieuChungToUpDate = existingTrieuChungMoi.get();
+                    trieuChungToUpDate.setTen_trieu_chung_moi(tenTrieuChungMoi);
 
-            Optional<UserEntity> existingUser = userRepository.findById(userId);
+                    TrieuChungMoiEntity saveTrieuChungMoi = trieuChungMoiRepository.save(trieuChungToUpDate);
+                    updatedTrieuChungs.add(saveTrieuChungMoi);
+                }
+            }
 
-            // Trích xuất tên triệu chứng từ mỗi đối tượng Map
-            List<String> tenTrieuChungList = trieuChungList.stream()
-                    .map(trieuChung -> trieuChung.get("trieu_chung"))
-                    .collect(Collectors.toList());
-
-            benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, tenTrieuChungList, trang_thai);
-
-            responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
-
-            return responseBody;
-        } catch (Exception e) {
-            responseBody.put("message", "Error"); // Thêm thông điệp lỗi vào body
-
-            return responseBody;
+            return ResponseEntity.ok(updatedTrieuChungs);
+        } else {
+            // Xử lý trường hợp không tìm thấy người dùng
+            return ResponseEntity.notFound().build();
         }
     }
+
 }
