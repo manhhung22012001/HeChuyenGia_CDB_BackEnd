@@ -34,7 +34,7 @@ public class DiagnosisService {
             String ten_trieu_chung = result[1].toString();
             // Kiểm tra xem mã triệu chứng có tồn tại trong mảng truyền vào không
             if (!selectedSymptomCodes.contains(ma_trieu_chung)) {
-                int ma_trieu_chung_int = Integer.parseInt(ma_trieu_chung);
+                Long ma_trieu_chung_int = Long.parseLong(ma_trieu_chung);
                 TrieuChungEntity trieuchungEntity = new TrieuChungEntity(ma_trieu_chung_int, ten_trieu_chung);
                 trieuchungEntities.add(trieuchungEntity);
 

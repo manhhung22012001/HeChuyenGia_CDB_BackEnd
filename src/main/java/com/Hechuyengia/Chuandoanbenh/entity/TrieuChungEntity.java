@@ -21,7 +21,7 @@ public class TrieuChungEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ma_trieu_chung")
-    private int ma_trieu_chung;
+    private Long ma_trieu_chung;
     
     @Column(name = "ten_trieu_chung")
     private String ten_trieu_chung;
@@ -29,19 +29,20 @@ public class TrieuChungEntity implements Serializable{
     public TrieuChungEntity() {
     }
 
-    public TrieuChungEntity(int ma_trieu_chung, String ten_trieu_chung) {
+    public TrieuChungEntity(Long ma_trieu_chung, String ten_trieu_chung) {
         this.ma_trieu_chung = ma_trieu_chung;
         this.ten_trieu_chung = ten_trieu_chung;
     }
-    
-    
-    public int getMa_trieu_chung() {
+
+    public Long getMa_trieu_chung() {
         return ma_trieu_chung;
     }
 
-    public void setMa_trieu_chung(int ma_trieu_chung) {
+    public void setMa_trieu_chung(Long ma_trieu_chung) {
         this.ma_trieu_chung = ma_trieu_chung;
     }
+
+    
 
     public String getTen_trieu_chung() {
         return ten_trieu_chung;

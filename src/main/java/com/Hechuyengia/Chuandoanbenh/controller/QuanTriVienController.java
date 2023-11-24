@@ -156,10 +156,11 @@ public class QuanTriVienController {
             @RequestParam(value = "user_Id") Long user_Id
     ) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Optional<UserEntity> existingUser = userRepository.findById(userId);
             if (existingUser.isPresent()) {
                 UserDetailEntity userDetail = userService.getUserDetail(user_Id);
-
+                
                 if (userDetail != null) {
                     Map<String, String> responseBody = new HashMap<>();
 
