@@ -12,32 +12,34 @@ import javax.persistence.Id;
  * @author tranm
  */
 public class TrieuChungBenhMoiId implements Serializable{
-    private  int trieuChungMoi;
-    private int benhMoi;
+    private  Long trieuChungMoi;
+    private Long benhMoi;
 
     public TrieuChungBenhMoiId() {
     }
 
-    public TrieuChungBenhMoiId(int trieuChungMoi, int benhMoi) {
+    public TrieuChungBenhMoiId(Long trieuChungMoi, Long benhMoi) {
         this.trieuChungMoi = trieuChungMoi;
         this.benhMoi = benhMoi;
     }
 
-    public int getTrieuChungMoi() {
+    public Long getTrieuChungMoi() {
         return trieuChungMoi;
     }
 
-    public void setTrieuChungMoi(int trieuChungMoi) {
+    public void setTrieuChungMoi(Long trieuChungMoi) {
         this.trieuChungMoi = trieuChungMoi;
     }
 
-    public int getBenhMoi() {
+    public Long getBenhMoi() {
         return benhMoi;
     }
 
-    public void setBenhMoi(int benhMoi) {
+    public void setBenhMoi(Long benhMoi) {
         this.benhMoi = benhMoi;
     }
+
+    
     
     // Equals and HashCode methods
     @Override
