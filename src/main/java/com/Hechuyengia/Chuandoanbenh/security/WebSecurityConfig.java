@@ -91,22 +91,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/taskbar-qtv/*").authenticated()
                 .antMatchers("/taskbar-qtv/delete/*").authenticated()
                 .antMatchers("/taskbar-qtv/edit/*").authenticated()
-//                .antMatchers("/taskbar-qtv/getFile/*").authenticated()
                 .antMatchers("/taskbar-qtv/getFile/*").authenticated()
                 .antMatchers("/taskbar-qtv/edit-benh-moi-va-trieu-chung-moi/*").authenticated()
-                
-                
-                
-                
+              
                 .antMatchers("/taskbar-cg/*").authenticated()
                 .antMatchers("/taskbar-cg/trieuchung/*").authenticated()
-                .antMatchers("/taskbar-cg/add-benh-va-trieu-chung/*").authenticated()
-                
+                .antMatchers("/taskbar-cg/add-benh-va-trieu-chung/*").authenticated()                
                 .antMatchers("/taskbar-cg/getuserdetail/*").authenticated()
                 
                 .antMatchers("/taskbar-cg0/userinfo/*").authenticated()
                 .antMatchers("/taskbar-ks/*").authenticated()
                 .antMatchers("/taskbar-ks/checkTC/*").authenticated()
+                .antMatchers("/taskbar-ks/add-Benh-and_TC/*").authenticated()
+                
                 .anyRequest().authenticated();
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

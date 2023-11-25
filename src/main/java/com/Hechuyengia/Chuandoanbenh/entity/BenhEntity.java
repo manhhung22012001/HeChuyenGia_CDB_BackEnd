@@ -11,24 +11,29 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 /**
  *
  * @author tranm
  */
 @Entity
 @Table(name = "benh")
-public class BenhEntity implements Serializable{
+public class BenhEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ma_benh")
     private int ma_benh;
-    
+
     @Column(name = "ten_benh")
     private String ten_benh;
-    
+
     @Column(name = "loai_he")
     private String loai_he;
-    
+
+    @Column(name = "id_user")
+    private Long id_user;
+
     public BenhEntity() {
     }
 
@@ -37,10 +42,19 @@ public class BenhEntity implements Serializable{
         this.ten_benh = ten_benh;
         this.loai_he = loai_he;
     }
-     public BenhEntity(int ma_benh, String ten_benh) {
+
+    public BenhEntity(int ma_benh, String ten_benh, String loai_he, Long id_user) {
+        this.ma_benh = ma_benh;
+        this.ten_benh = ten_benh;
+        this.loai_he = loai_he;
+        this.id_user = id_user;
+    }
+
+    public BenhEntity(int ma_benh, String ten_benh) {
         this.ma_benh = ma_benh;
         this.ten_benh = ten_benh;
     }
+
     public int getMa_benh() {
         return ma_benh;
     }
@@ -65,8 +79,12 @@ public class BenhEntity implements Serializable{
         this.loai_he = loai_he;
     }
 
-  
+    public Long getId_user() {
+        return id_user;
+    }
 
-    
-    
+    public void setId_user(Long id_user) {
+        this.id_user = id_user;
+    }
+
 }
