@@ -13,34 +13,35 @@ import javax.persistence.Id;
  */
 public class TrieuChungBenhId implements Serializable{
     
-    private  int trieuChung;
-    private int benh;
+    private  Long trieuChung;
+    private Long benh;
 
     // Constructors
     public TrieuChungBenhId() {
     }
 
-    public TrieuChungBenhId(int trieuChung, int benh) {
+    public TrieuChungBenhId(Long trieuChung, Long benh) {
         this.trieuChung = trieuChung;
         this.benh = benh;
     }
 
-    // Getters and Setters
-    public int getTrieuChung() {
+    public Long getTrieuChung() {
         return trieuChung;
     }
 
-    public void setTrieuChung(int trieuChung) {
+    public void setTrieuChung(Long trieuChung) {
         this.trieuChung = trieuChung;
     }
 
-    public int getBenh() {
+    public Long getBenh() {
         return benh;
     }
 
-    public void setBenh(int benh) {
+    public void setBenh(Long benh) {
         this.benh = benh;
     }
+
+   
 
     // Equals and HashCode methods
     @Override

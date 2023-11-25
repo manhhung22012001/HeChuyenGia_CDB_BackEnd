@@ -23,7 +23,7 @@ public class BenhEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ma_benh")
-    private int ma_benh;
+    private Long ma_benh;
 
     @Column(name = "ten_benh")
     private String ten_benh;
@@ -37,31 +37,39 @@ public class BenhEntity implements Serializable {
     public BenhEntity() {
     }
 
-    public BenhEntity(int ma_benh, String ten_benh, String loai_he) {
+    public BenhEntity(Long ma_benh, String ten_benh, String loai_he) {
         this.ma_benh = ma_benh;
         this.ten_benh = ten_benh;
         this.loai_he = loai_he;
     }
 
-    public BenhEntity(int ma_benh, String ten_benh, String loai_he, Long id_user) {
+    public BenhEntity(Long ma_benh, String ten_benh, String loai_he, Long id_user) {
         this.ma_benh = ma_benh;
         this.ten_benh = ten_benh;
         this.loai_he = loai_he;
         this.id_user = id_user;
     }
 
-    public BenhEntity(int ma_benh, String ten_benh) {
+   
+
+    
+
+    public BenhEntity(Long ma_benh, String ten_benh) {
         this.ma_benh = ma_benh;
         this.ten_benh = ten_benh;
     }
 
-    public int getMa_benh() {
+    
+
+    public Long getMa_benh() {
         return ma_benh;
     }
 
-    public void setMa_benh(int ma_benh) {
+    public void setMa_benh(Long ma_benh) {
         this.ma_benh = ma_benh;
     }
+
+    
 
     public String getTen_benh() {
         return ten_benh;

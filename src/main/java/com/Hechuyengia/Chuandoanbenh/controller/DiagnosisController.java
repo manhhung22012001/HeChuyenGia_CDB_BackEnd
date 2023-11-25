@@ -77,7 +77,7 @@ public class DiagnosisController {
     }
     @CrossOrigin
     @GetMapping("/trieuchung/{ma_benh}")
-    public ResponseEntity<List<Object[]>> getTrieuChungByMaBenh(@PathVariable int ma_benh) {
+    public ResponseEntity<List<Object[]>> getTrieuChungByMaBenh(@PathVariable Long ma_benh) {
         
         List<Object[]> trieuchung = benhRepository.findTrieuChungByMaBenh(ma_benh);
         if (trieuchung != null && !trieuchung.isEmpty()) {
