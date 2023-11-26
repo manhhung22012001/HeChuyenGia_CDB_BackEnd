@@ -89,6 +89,8 @@ public class KySuController {
             
             String tenBenh = (String) requestBody.get("ten_benh");
             String loaiHe = (String) requestBody.get("loai_he");
+            String ghi_chu =(String) requestBody.get("ghi_chu");
+            //Long ma_benh_moi = (Long) requestBody.get("ma_benh_moi");
             // Assuming "trieu_chung" is a list of objects with a "trieu_chung" field
             List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
 
@@ -101,7 +103,7 @@ public class KySuController {
                     .map(trieuChung -> trieuChung.get("trieu_chung"))
                     .collect(Collectors.toList());
 
-            trieuChungService.saveBenhVaTrieuChung(userId, loaiHe, tenBenh, tenTrieuChungList);
+            trieuChungService.saveBenhVaTrieuChung(userId, loaiHe, tenBenh, tenTrieuChungList,ghi_chu);
 
             responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
 

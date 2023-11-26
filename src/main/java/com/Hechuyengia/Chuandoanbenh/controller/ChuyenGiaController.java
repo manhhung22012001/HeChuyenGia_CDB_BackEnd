@@ -97,11 +97,12 @@ public class ChuyenGiaController {
             String tenBenh = (String) requestBody.get("ten_benh");
             String loaiHe = (String) requestBody.get("loai_he");
             String trang_thai =(String) requestBody.get("trang_thai");
+            String ghi_chu =(String) requestBody.get("ghi_chu");
             // Assuming "trieu_chung" is a list of objects with a "trieu_chung" field
             List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
             
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList+ "trang thai: "+trang_thai);
+            System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList+ "trang thai: "+trang_thai+" Ghi chu"+ ghi_chu);
 
             Optional<UserEntity> existingUser = userRepository.findById(userId);
 
@@ -110,7 +111,7 @@ public class ChuyenGiaController {
                     .map(trieuChung -> trieuChung.get("trieu_chung"))
                     .collect(Collectors.toList());
 
-            benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, tenTrieuChungList, trang_thai);
+            benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, tenTrieuChungList, trang_thai, ghi_chu);
 
              responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
 
