@@ -119,11 +119,24 @@ public class KySuController {
         }
     }
 
-    @GetMapping("/getall")
-    public List<BenhEntity> list() {
+    @PostMapping("/lay-danh-sach-benh-da-co-luat")
+    public Map<String, Object> getDSBenhDaCoLuat(@RequestBody Map<String, Object> requestBody) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, Object> responseBody = new HashMap<>();
 
-        return benhRepository.findAll();
+        try {
+            List<String> tenBenhList = (List<String>) requestBody.get("ten_benh");
+            System.out.println("Danh sach nhan duoc: "+ tenBenhList);
+            // Xử lý danh sách tên bệnh ở đây, ví dụ: lưu vào CSDL, xử lý logic, ...
+            // Gửi phản hồi về client (nếu cần)
+            responseBody.put("success", true);
+            responseBody.put("message", "Dữ liệu đã được xử lý thành công");
+        } catch (Exception e) {
+            responseBody.put("success", false);
+            responseBody.put("message", "Có lỗi xảy ra khi xử lý dữ liệu: " + e.getMessage());
+        }
+
+        return responseBody;
     }
 
 }
