@@ -31,7 +31,7 @@ public interface BenhRepository extends JpaRepository<BenhEntity, Long> {
     @Query("SELECT b FROM BenhEntity b WHERE b.loai_he = :loai_he")
     List<BenhEntity> findByLoaiHe(@Param("loai_he") String loai_he);
 
-    @Query(value = "SELECT t.ma_benh, t.ten_benh "
+    @Query(value = "SELECT t.ma_benh "
             + "FROM benh t "
             + "LEFT JOIN lien_ket_benh_luat m ON t.ma_benh = m.ma_benh "
             + "WHERE m.ma_luat IS NULL "

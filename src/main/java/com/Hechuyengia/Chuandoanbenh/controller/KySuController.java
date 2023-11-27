@@ -134,8 +134,7 @@ public class KySuController {
             List<Map<String, Object>> benhDaCoLuat = benhService.getDS(tenBenhList);
             System.out.println("Danh sách: " + benhDaCoLuat);
             // Gửi danh sách bệnh có luật về client
-            responseBody.put("success", true);
-            responseBody.put("message", "Dữ liệu đã được xử lý thành công");
+            
             responseBody.put("data", benhDaCoLuat);
             
         } catch (Exception e) {
