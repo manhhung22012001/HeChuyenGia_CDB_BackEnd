@@ -31,7 +31,7 @@ public class BenhService {
             for (Object[] benh : benhDaCoLuat) {
                 Map<String, Object> benhInfo = new HashMap<>();
                 benhInfo.put("ma_benh", benh[0]);
-                benhInfo.put("ten_benh", benh[1]);
+                
                 result.add(benhInfo);
             }
         }
