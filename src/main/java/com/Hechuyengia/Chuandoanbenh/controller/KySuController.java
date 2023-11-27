@@ -11,6 +11,7 @@ import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
+import com.Hechuyengia.Chuandoanbenh.service.BenhService;
 import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
 import com.Hechuyengia.Chuandoanbenh.service.UserService;
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class KySuController {
     TrieuChungService trieuChungService;
     @Autowired
     BenhRepository benhRepository;
+    @Autowired
+    BenhService benhService;
 
     @Autowired
     public KySuController(UserService userService) {
@@ -121,16 +124,20 @@ public class KySuController {
 
     @PostMapping("/lay-danh-sach-benh-da-co-luat")
     public Map<String, Object> getDSBenhDaCoLuat(@RequestBody Map<String, Object> requestBody) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> responseBody = new HashMap<>();
 
         try {
             List<String> tenBenhList = (List<String>) requestBody.get("ten_benh");
-            System.out.println("Danh sach nhan duoc: "+ tenBenhList);
-            // Xử lý danh sách tên bệnh ở đây, ví dụ: lưu vào CSDL, xử lý logic, ...
-            // Gửi phản hồi về client (nếu cần)
+            System.out.println("Danh sach nhan duoc: " + tenBenhList);
+
+            // Gọi phương thức trong BenhService để lấy danh sách bệnh có luật
+            List<Map<String, Object>> benhDaCoLuat = benhService.getDS(tenBenhList);
+            System.out.println("Danh sách: " + benhDaCoLuat);
+            // Gửi danh sách bệnh có luật về client
             responseBody.put("success", true);
             responseBody.put("message", "Dữ liệu đã được xử lý thành công");
+            responseBody.put("data", benhDaCoLuat);
+            
         } catch (Exception e) {
             responseBody.put("success", false);
             responseBody.put("message", "Có lỗi xảy ra khi xử lý dữ liệu: " + e.getMessage());
