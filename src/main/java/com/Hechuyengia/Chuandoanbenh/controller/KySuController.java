@@ -12,6 +12,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhService;
+import com.Hechuyengia.Chuandoanbenh.service.LuatService;
 import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
 import com.Hechuyengia.Chuandoanbenh.service.UserService;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +55,8 @@ public class KySuController {
     BenhRepository benhRepository;
     @Autowired
     BenhService benhService;
+    @Autowired
+    LuatService luatService;
 
     @Autowired
     public KySuController(UserService userService) {
@@ -134,9 +138,9 @@ public class KySuController {
             List<Map<String, Object>> benhDaCoLuat = benhService.getDS(tenBenhList);
             System.out.println("Danh sách: " + benhDaCoLuat);
             // Gửi danh sách bệnh có luật về client
-            
+
             responseBody.put("data", benhDaCoLuat);
-            
+
         } catch (Exception e) {
             responseBody.put("success", false);
             responseBody.put("message", "Có lỗi xảy ra khi xử lý dữ liệu: " + e.getMessage());
@@ -145,4 +149,37 @@ public class KySuController {
         return responseBody;
     }
 
+    @PutMapping("save-luat-loai-1//{userId}")
+    public Map<String, Object> saveLuatLoai1(
+            @PathVariable("userId") Long userId,
+            @RequestBody Map<String, Object> requestBody
+    ) {
+        Map<String, Object> responseBody = new HashMap<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<UserEntity> existingUser = userRepository.findById(userId);
+        
+        if (existingUser.isPresent()) {
+            Long loai_luat = (Long) requestBody.get("loai_luat");
+            String ten_luat = (String) requestBody.get("ten_luat");
+            BenhEntity ma_benh = (BenhEntity) requestBody.get("ma_benh");
+
+            //Optional<UserEntity> existingUser = userRepository.findById(userId);
+            List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("ma_trieu_chung");
+            // Trích xuất mã triệu chứng từ mỗi đối tượng Map
+            List<String> maTrieuChungList = trieuChungList.stream()
+                    .map(trieuChung -> trieuChung.get("ma_trieu_chung"))
+                    .collect(Collectors.toList());
+            //responseBody.put("message", maTrieuChungList);
+            System.out.println("Loai luat: "+ loai_luat+ " Ten luat: "+ ten_luat+" Ma benh: "+ ma_benh+" ds TC: "+ maTrieuChungList);   
+            
+            luatService.saveLuatLoai1(userId,loai_luat,ten_luat,ma_benh,maTrieuChungList);
+        } else {
+
+            responseBody.put("message", "Use không tồn tại"); // Người dùng không tồn tại
+        }
+        return responseBody;
+        
+        
+
+    }
 }

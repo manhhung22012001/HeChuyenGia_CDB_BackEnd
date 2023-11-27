@@ -13,35 +13,35 @@ import javax.persistence.Id;
  */
 
 public class LienKetBenhLuatId implements Serializable{
-    private int luat;
-    private int maBenh;
+    private Long luat;
+    private Long maBenh;
     // contructer
 
     public LienKetBenhLuatId() {
     }
 
-    public LienKetBenhLuatId(int luat, int maBenh) {
+    public LienKetBenhLuatId(Long luat, Long maBenh) {
         this.luat = luat;
         this.maBenh = maBenh;
     }
 
-    public int getLuat() {
+    public Long getLuat() {
         return luat;
     }
 
-    public void setLuat(int luat) {
+    public void setLuat(Long luat) {
         this.luat = luat;
     }
 
-    public int getMaBenh() {
+    public Long getMaBenh() {
         return maBenh;
     }
 
-    public void setMaBenh(int maBenh) {
+    public void setMaBenh(Long maBenh) {
         this.maBenh = maBenh;
     }
 
-   
+       
 
     
     

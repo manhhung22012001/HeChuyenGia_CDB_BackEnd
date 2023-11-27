@@ -60,45 +60,55 @@ public class TrieuChungService {
         return trieuchungRepository.findTrieuChungonly();
     }
     
-    @Transactional
-    public void saveBenhVaTrieuChung(Long userEntity, String loaiHe, String tenBenh, List<String> trieuChungList, String ghi_chu) {
-        try {
-            
-            // Tạo mới đối tượng BenhMoiEntity và lưu vào bảng bệnh mới
-            BenhEntity benhEntity = new BenhEntity();
-            benhEntity.setTen_benh(tenBenh);
-            benhEntity.setLoai_he(loaiHe);
-            benhEntity.setId_user(userEntity);
-            
-            BenhEntity savedBenh = benhRepository.save(benhEntity);
-            
-            // tìm ma_benh_moi dựa theo ten_benh_moi ở đây
-            Long ma_benh_moi = benhMoiRepository.finMaBenhMoiByTenBenhMoi(tenBenh);      
-            //System.out.println("Ma benh: "+ ma_benh_moi);
-            Optional<BenhMoiEntity> existingBenhMoi = benhMoiRepository.findById(ma_benh_moi);
-            if (existingBenhMoi.isPresent()) {
-                BenhMoiEntity benhToUpdate = existingBenhMoi.get();
-                benhToUpdate.setGhi_chu(ghi_chu);
-                
-                 benhMoiRepository.save(benhToUpdate);
-            }
-            // Lưu triệu chứng và liên kết với bệnh vừa tạo
-            for (String tenTrieuChung : trieuChungList) {
-                // Tạo mới đối tượng TrieuChungMoiEntity và lưu vào bảng triệu chứng mới
+   @Transactional
+public void saveBenhVaTrieuChung(Long userEntity, String loaiHe, String tenBenh, List<String> trieuChungList, String ghi_chu) {
+    try {
+        BenhEntity benhEntity = new BenhEntity();
+        // ... (Code tạo đối tượng BenhEntity)
+
+        BenhEntity savedBenh = benhRepository.save(benhEntity);
+
+        Long ma_benh_moi = benhMoiRepository.finMaBenhMoiByTenBenhMoi(tenBenh);
+        Optional<BenhMoiEntity> existingBenhMoi = benhMoiRepository.findById(ma_benh_moi);
+        if (existingBenhMoi.isPresent()) {
+            BenhMoiEntity benhToUpdate = existingBenhMoi.get();
+            benhToUpdate.setGhi_chu(ghi_chu);
+            benhMoiRepository.save(benhToUpdate);
+        }
+
+        // Tạo danh sách triệu chứng đã tồn tại trong cơ sở dữ liệu
+        List<TrieuChungEntity> existingTrieuChungEntities = trieuChungRepository.findByTenTrieuChungIn(trieuChungList);
+
+        // Lưu triệu chứng mới (nếu chưa tồn tại trong cơ sở dữ liệu)
+        for (String tenTrieuChung : trieuChungList) {
+            TrieuChungEntity existingTrieuChung = existingTrieuChungEntities.stream()
+                    .filter(trieuChung -> tenTrieuChung.equals(trieuChung.getTen_trieu_chung()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingTrieuChung == null) {
+                // Nếu triệu chứng không tồn tại, thêm mới vào cơ sở dữ liệu
                 TrieuChungEntity trieuChungEntity = new TrieuChungEntity();
                 trieuChungEntity.setTen_trieu_chung(tenTrieuChung);
                 TrieuChungEntity savedTrieuChung = trieuChungRepository.save(trieuChungEntity);
 
-                // Tạo mới đối tượng TrieuChungBenhMoiEntity và lưu vào bảng liên kết
+                // Liên kết triệu chứng mới với bệnh
                 TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
                 trieuChungBenhEntity.setBenh(savedBenh);
                 trieuChungBenhEntity.setTrieuChung(savedTrieuChung);
                 trieuChungBenhRepository.save(trieuChungBenhEntity);
+            } else {
+                // Nếu triệu chứng đã tồn tại, chỉ thực hiện việc liên kết với bệnh
+                TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
+                trieuChungBenhEntity.setBenh(savedBenh);
+                trieuChungBenhEntity.setTrieuChung(existingTrieuChung);
+                trieuChungBenhRepository.save(trieuChungBenhEntity);
             }
-        } catch (Exception e) {
-            // Xử lý exception nếu có
-            e.printStackTrace();
-            throw e;
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw e;
     }
+}
+
 }

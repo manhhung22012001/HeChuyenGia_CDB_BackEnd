@@ -37,4 +37,6 @@ public interface LuatRepository extends JpaRepository<LuatEntity, Integer> {
             + "HAVING COUNT(DISTINCT tc.ma_trieu_chung) >=2;", nativeQuery = true)
     List<Object[]> findSymptomsInSelectedBenh1(List<String> danh_sach_tc);
 
+//    public Object findById(Long ma_luat);
+
 }

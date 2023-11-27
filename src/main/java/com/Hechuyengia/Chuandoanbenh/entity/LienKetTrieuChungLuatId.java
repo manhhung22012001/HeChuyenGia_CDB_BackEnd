@@ -12,33 +12,34 @@ import javax.persistence.Id;
  * @author tranm
  */
 public class LienKetTrieuChungLuatId implements Serializable{
-    private int luat;
-    private int trieuChung;
+    private Long luat;
+    private Long trieuChung;
 
     public LienKetTrieuChungLuatId() {
     }
 
-    public LienKetTrieuChungLuatId(int luat, int trieuChung) {
+    public LienKetTrieuChungLuatId(Long luat, Long trieuChung) {
         this.luat = luat;
         this.trieuChung = trieuChung;
     }
 
-    public int getLuat() {
+    public Long getLuat() {
         return luat;
     }
 
-    public void setLuat(int luat) {
+    public void setLuat(Long luat) {
         this.luat = luat;
     }
 
-    public int getTrieuChung() {
+    public Long getTrieuChung() {
         return trieuChung;
     }
 
-    public void setTrieuChung(int trieuChung) {
+    public void setTrieuChung(Long trieuChung) {
         this.trieuChung = trieuChung;
     }
 
+    
     
      @Override
     public boolean equals(Object o) {
