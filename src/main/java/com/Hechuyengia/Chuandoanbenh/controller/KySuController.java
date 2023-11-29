@@ -110,7 +110,7 @@ public class KySuController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
             Optional<UserEntity> existingUser = userRepository.findById(userId);
-            
+
             // Trích xuất tên triệu chứng từ mỗi đối tượng Map
             List<String> tenTrieuChungList = trieuChungList.stream()
                     .map(trieuChung -> trieuChung.get("trieu_chung"))
@@ -159,26 +159,27 @@ public class KySuController {
         Map<String, Object> responseBody = new HashMap<>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<UserEntity> existingUser = userRepository.findById(userId);
-        
-        if (existingUser.isPresent()) {
-            Long loai_luat = (Long) requestBody.get("loai_luat");
-            String ten_luat = (String) requestBody.get("ten_luat");
-            Long ma_benh = (Long) requestBody.get("ma_benh");
 
-            //Optional<UserEntity> existingUser = userRepository.findById(userId);
-            List<Long> maTrieuChungList = (List<Long>) requestBody.get("ma_trieu_chung");
-           
-            System.out.println("Loai luat: "+ loai_luat+ " Ten luat: "+ ten_luat+" Ma benh: "+ ma_benh+" ds TC: "+ maTrieuChungList);   
-            
-            luatService.saveLuatLoai1(userId,loai_luat,ten_luat,ma_benh,maTrieuChungList);
+        if (existingUser.isPresent()) {
+            Long loai_luat = Long.valueOf(requestBody.get("loai_luat").toString());
+            Long ma_benh = Long.valueOf(requestBody.get("ma_benh").toString());
+
+            List<Integer> maTrieuChungListRaw = (List<Integer>) requestBody.get("ma_trieu_chung");
+
+            // Chuyển đổi từ Integer sang Long
+            List<Long> maTrieuChungList = new ArrayList<>();
+            for (Integer value : maTrieuChungListRaw) {
+                maTrieuChungList.add(value.longValue());
+            }
+
+            //System.out.println("Loai luat: " + requestBody.get("loai_luat") + " Ma benh: " + requestBody.get("ma_benh") + " ds TC: " + maTrieuChungList);
+
+            luatService.saveLuatLoai1(userId, loai_luat, ma_benh, maTrieuChungList);
             responseBody.put("message", "Thêm luật thành công");
         } else {
-
-            responseBody.put("message", "Use không tồn tại"); // Người dùng không tồn tại
+            responseBody.put("message", "Use không tồn tại");
         }
         return responseBody;
-        
-        
-
     }
+
 }

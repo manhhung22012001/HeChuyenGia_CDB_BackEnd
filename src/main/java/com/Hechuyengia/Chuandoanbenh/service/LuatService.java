@@ -38,7 +38,7 @@ public class LuatService {
     TrieuChungRepository trieuChungRepository;
 
     @Transactional
-    public void saveLuatLoai1(Long userId, Long loai_luat, String ten_luat, Long ma_benh, List<Long> maTrieuChungList) {
+    public void saveLuatLoai1(Long userId, Long loai_luat,  Long ma_benh, List<Long> maTrieuChungList) {
         //1. Lưu thông tin luật vào bảng `luat`
         LuatEntity luatEntity = new LuatEntity();
         //luatEntity.setTen_luat(ten_luat);
@@ -53,7 +53,7 @@ public class LuatService {
         BenhEntity benhEnitity = benhRepository.findById(ma_benh).orElse(null);
         if (benhEnitity != null) {
             lienKetBenhLuatEntity.setMaBenh(benhEnitity);
-            System.out.println("ma benhL "+benhEnitity);
+            //System.out.println("ma benhL "+benhEnitity);
             LienKetBenhLuatEntity savedLienKetBenhLuat = lienKetBenhLuatRepository.save(lienKetBenhLuatEntity);
         }
         // 3. Lưu thông tin về mối quan hệ giữa luật và triệu chứng vào bảng `lien_ket_trieu_chung_luat`
@@ -64,7 +64,7 @@ public class LuatService {
         for (TrieuChungEntity trieuChungEntity : trieuChungEntities) {
             lienKetTrieuChungLuatEntity.setLuat(savedLuat);
             lienKetTrieuChungLuatEntity.setTrieuChung(trieuChungEntity);
-            System.out.println("ma tc "+trieuChungEntity);
+            //System.out.println("ma tc "+trieuChungEntity);
             lienKetTrieuChungLuatRepository.save(lienKetTrieuChungLuatEntity);
             
         }
