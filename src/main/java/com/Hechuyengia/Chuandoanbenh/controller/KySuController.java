@@ -9,6 +9,7 @@ import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhService;
@@ -57,6 +58,8 @@ public class KySuController {
     BenhService benhService;
     @Autowired
     LuatService luatService;
+    @Autowired
+    TrieuChungBenhRepository trieuChungBenhRepository;
 
     @Autowired
     public KySuController(UserService userService) {
@@ -163,24 +166,35 @@ public class KySuController {
         if (existingUser.isPresent()) {
             Long loai_luat = Long.valueOf(requestBody.get("loai_luat").toString());
             Long ma_benh = Long.valueOf(requestBody.get("ma_benh").toString());
-
             List<Integer> maTrieuChungListRaw = (List<Integer>) requestBody.get("ma_trieu_chung");
-
             // Chuyển đổi từ Integer sang Long
             List<Long> maTrieuChungList = new ArrayList<>();
             for (Integer value : maTrieuChungListRaw) {
                 maTrieuChungList.add(value.longValue());
             }
-
-            //System.out.println("Loai luat: " + requestBody.get("loai_luat") + " Ma benh: " + requestBody.get("ma_benh") + " ds TC: " + maTrieuChungList);
-
             luatService.saveLuatLoai1(userId, loai_luat, ma_benh, maTrieuChungList);
+            // trả về danh sách
+            List<Long> nonNullMatchingBenhIdsList = new ArrayList<>();
+
+            for (Long ma_trieu_chung : maTrieuChungList) {
+                List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
+                System.out.println("ABC" + matchingBenhIds);
+
+                // Check if matchingBenhIds is not null and add 1 to nonNullMatchingBenhIdsList, else add 0
+                if (matchingBenhIds != null && !matchingBenhIds.isEmpty()) {
+//                    nonNullMatchingBenhIdsList.add(1);
+                    nonNullMatchingBenhIdsList.add(0L);
+                } else {
+                    nonNullMatchingBenhIdsList.add(ma_trieu_chung);
+                }
+            }
+            System.out.println("Non-null matching BenhIds: " + nonNullMatchingBenhIdsList);
+            responseBody.put("nonNullMatchingBenhIdsList", nonNullMatchingBenhIdsList);
             responseBody.put("message", "Thêm luật thành công");
         } else {
             responseBody.put("message", "Use không tồn tại");
         }
         return responseBody;
     }
-    
-     
+
 }

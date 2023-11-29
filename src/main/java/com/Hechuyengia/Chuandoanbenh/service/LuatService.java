@@ -15,6 +15,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.LienKetTrieuChungLuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.LuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
+import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,10 +75,20 @@ public class LuatService {
         //4. tìm mã triệu trứng đã có trong bệnh bệnh khác để trả về cho luật loại 3
         // Kiểm tra xem có triệu chứng nào khớp với bệnh nào không
 
-        for (Long ma_trieu_chung : maTrieuChungList) {
-            List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
-            System.out.println("ABC" + matchingBenhIds);
-        }
+//        List<Integer> nonNullMatchingBenhIdsList = new ArrayList<>();
+//
+//        for (Long ma_trieu_chung : maTrieuChungList) {
+//            List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
+//            System.out.println("ABC" + matchingBenhIds);
+//
+//            // Check if matchingBenhIds is not null and add 1 to nonNullMatchingBenhIdsList, else add 0
+//            if (matchingBenhIds != null && !matchingBenhIds.isEmpty()) {
+//                nonNullMatchingBenhIdsList.add(1);
+//            } else {
+//                nonNullMatchingBenhIdsList.add(0);
+//            }
+//        }
+//        System.out.println("Non-null matching BenhIds: " + nonNullMatchingBenhIdsList);
 
     }
 
