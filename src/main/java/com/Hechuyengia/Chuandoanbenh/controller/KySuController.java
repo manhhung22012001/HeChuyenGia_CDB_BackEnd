@@ -104,11 +104,11 @@ public class KySuController {
             //Long ma_benh_moi = (Long) requestBody.get("ma_benh_moi");
             // Assuming "trieu_chung" is a list of objects with a "trieu_chung" field
             List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
-            List<TrieuChungEntity> maTrieuChungList = (List<TrieuChungEntity>) requestBody.get("ma_trieu_chung");
+            //List<TrieuChungEntity> maTrieuChungList = (List<TrieuChungEntity>) requestBody.get("ma_trieu_chung");
             //nhận thêm 1 danh sách mã triệu chứng 
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList+" danh sách mã tc"+ maTrieuChungList);
+            System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
             Optional<UserEntity> existingUser = userRepository.findById(userId);
             
             // Trích xuất tên triệu chứng từ mỗi đối tượng Map

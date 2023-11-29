@@ -105,11 +105,16 @@ public class TrieuChungService {
                     trieuChungBenhEntity.setTrieuChung(savedTrieuChung);
                     trieuChungBenhRepository.save(trieuChungBenhEntity);
                 } else {
-                    Long ma_benh = savedBenh.getMa_benh();
-                    Long ma_trieu_chung = existingTrieuChung.getMa_trieu_chung();
-                    System.out.println("ma tc" + existingTrieuChung.getMa_trieu_chung() + "ma benh: " + ma_benh);
-                    String sql = "INSERT INTO trieu_chung_benh (ma_benh, ma_trieu_chung) VALUES (?, ?)";
-                    jdbcTemplate.update(sql, ma_benh, ma_trieu_chung);
+                    TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
+                    trieuChungBenhEntity.setBenh(savedBenh);
+                    trieuChungBenhEntity.setTrieuChung(existingTrieuChung);
+                    System.out.println("exit: "+ existingTrieuChung);
+                    trieuChungBenhRepository.save(trieuChungBenhEntity);
+//                    Long ma_benh = savedBenh.getMa_benh();
+//                    Long ma_trieu_chung = existingTrieuChung.getMa_trieu_chung();
+//                    System.out.println("ma tc" + existingTrieuChung.getMa_trieu_chung() + "ma benh: " + ma_benh);
+//                    String sql = "INSERT INTO trieu_chung_benh (ma_benh, ma_trieu_chung) VALUES (?, ?)";
+//                    jdbcTemplate.update(sql, ma_benh, ma_trieu_chung);
 
                 }
             }
