@@ -151,7 +151,7 @@ public class KySuController {
         return responseBody;
     }
 
-    @PutMapping("save-luat-loai-1//{userId}")
+    @PutMapping("save-luat-loai-1/{userId}")
     public Map<String, Object> saveLuatLoai1(
             @PathVariable("userId") Long userId,
             @RequestBody Map<String, Object> requestBody
@@ -163,18 +163,15 @@ public class KySuController {
         if (existingUser.isPresent()) {
             Long loai_luat = (Long) requestBody.get("loai_luat");
             String ten_luat = (String) requestBody.get("ten_luat");
-            BenhEntity ma_benh = (BenhEntity) requestBody.get("ma_benh");
+            Long ma_benh = (Long) requestBody.get("ma_benh");
 
             //Optional<UserEntity> existingUser = userRepository.findById(userId);
-            List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("ma_trieu_chung");
-            // Trích xuất mã triệu chứng từ mỗi đối tượng Map
-            List<String> maTrieuChungList = trieuChungList.stream()
-                    .map(trieuChung -> trieuChung.get("ma_trieu_chung"))
-                    .collect(Collectors.toList());
-            //responseBody.put("message", maTrieuChungList);
+            List<Long> maTrieuChungList = (List<Long>) requestBody.get("ma_trieu_chung");
+           
             System.out.println("Loai luat: "+ loai_luat+ " Ten luat: "+ ten_luat+" Ma benh: "+ ma_benh+" ds TC: "+ maTrieuChungList);   
             
             luatService.saveLuatLoai1(userId,loai_luat,ten_luat,ma_benh,maTrieuChungList);
+            responseBody.put("message", "Thêm luật thành công");
         } else {
 
             responseBody.put("message", "Use không tồn tại"); // Người dùng không tồn tại

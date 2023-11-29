@@ -103,6 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/taskbar-ks/*").authenticated()
                 .antMatchers("/taskbar-ks/checkTC/*").authenticated()
                 .antMatchers("/taskbar-ks/add-Benh-and_TC/*").authenticated()
+                .antMatchers("/taskbar-ks/save-luat-loai-1/*").permitAll()
                 
                 .anyRequest().authenticated();
         // Thêm một lớp Filter kiểm tra jwt

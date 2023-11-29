@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LuatRepository extends JpaRepository<LuatEntity, Integer> {
+public interface LuatRepository extends JpaRepository<LuatEntity, Long> {
 
     @Query(value = "SELECT DISTINCT tc.ma_trieu_chung, tc.ten_trieu_chung "
             + "FROM trieu_chung tc "
@@ -37,6 +37,6 @@ public interface LuatRepository extends JpaRepository<LuatEntity, Integer> {
             + "HAVING COUNT(DISTINCT tc.ma_trieu_chung) >=2;", nativeQuery = true)
     List<Object[]> findSymptomsInSelectedBenh1(List<String> danh_sach_tc);
 
-//    public Object findById(Long ma_luat);
+
 
 }
