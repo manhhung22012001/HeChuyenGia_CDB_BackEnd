@@ -116,7 +116,7 @@ public class KySuController {
                     .map(trieuChung -> trieuChung.get("trieu_chung"))
                     .collect(Collectors.toList());
 
-            //trieuChungService.saveBenhVaTrieuChung(userId, loaiHe, tenBenh, tenTrieuChungList, ghi_chu);
+            trieuChungService.saveBenhVaTrieuChung(userId, loaiHe, tenBenh, tenTrieuChungList, ghi_chu);
 
             responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
 

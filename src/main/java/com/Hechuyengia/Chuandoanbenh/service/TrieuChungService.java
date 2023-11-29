@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 import javax.transaction.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
@@ -30,7 +32,7 @@ import javax.transaction.Transactional;
 public class TrieuChungService {
 
     private final TrieuChungRepository trieuchungRepository;
-
+    private final JdbcTemplate jdbcTemplate;
     @Autowired
     TrieuChungBenhRepository trieuChungBenhRepository;
 
@@ -44,7 +46,8 @@ public class TrieuChungService {
     TrieuChungRepository trieuChungRepository;
 
     @Autowired
-    public TrieuChungService(TrieuChungRepository trieuchungRepository) {
+    public TrieuChungService(DataSource dataSource, TrieuChungRepository trieuchungRepository) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.trieuchungRepository = trieuchungRepository;
     }
 
@@ -89,7 +92,7 @@ public class TrieuChungService {
                         .filter(trieuChung -> tenTrieuChung.equals(trieuChung.getTen_trieu_chung()))
                         .findFirst()
                         .orElse(null);
-                System.out.println("a+" + existingTrieuChung);
+
                 if (existingTrieuChung == null) {
                     // Nếu triệu chứng không tồn tại, thêm mới vào cơ sở dữ liệu
                     TrieuChungEntity trieuChungEntity = new TrieuChungEntity();
@@ -102,16 +105,12 @@ public class TrieuChungService {
                     trieuChungBenhEntity.setTrieuChung(savedTrieuChung);
                     trieuChungBenhRepository.save(trieuChungBenhEntity);
                 } else {
-//                    // Nếu triệu chứng đã tồn tại, chỉ thực hiện việc liên kết với bệnh
-//                    TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
-//                    trieuChungBenhEntity.setBenh(savedBenh);
-//                    Long ma_trieu_chung = existingTrieuChung.getMa_trieu_chung(); // Lấy mã triệu chứng từ đối tượng đã tìm thấy
-//                    trieuChungBenhEntity.setTrieuChung(ma_trieu_chung);
-//
-//
-//                    trieuChungBenhRepository.save(trieuChungBenhEntity); // Lưu thông tin vào bảng TrieuChungBenhEntity
+                    Long ma_benh = savedBenh.getMa_benh();
+                    Long ma_trieu_chung = existingTrieuChung.getMa_trieu_chung();
+                    System.out.println("ma tc" + existingTrieuChung.getMa_trieu_chung() + "ma benh: " + ma_benh);
+                    String sql = "INSERT INTO trieu_chung_benh (ma_benh, ma_trieu_chung) VALUES (?, ?)";
+                    jdbcTemplate.update(sql, ma_benh, ma_trieu_chung);
 
-                    
                 }
             }
         } catch (Exception e) {
