@@ -13,6 +13,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.LienKetBenhLuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.LienKetTrieuChungLuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.LuatRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -36,9 +37,11 @@ public class LuatService {
     LienKetTrieuChungLuatRepository lienKetTrieuChungLuatRepository;
     @Autowired
     TrieuChungRepository trieuChungRepository;
+    @Autowired
+    TrieuChungBenhRepository trieuChungBenhRepository;
 
     @Transactional
-    public void saveLuatLoai1(Long userId, Long loai_luat,  Long ma_benh, List<Long> maTrieuChungList) {
+    public void saveLuatLoai1(Long userId, Long loai_luat, Long ma_benh, List<Long> maTrieuChungList) {
         //1. Lưu thông tin luật vào bảng `luat`
         LuatEntity luatEntity = new LuatEntity();
         //luatEntity.setTen_luat(ten_luat);
@@ -46,7 +49,7 @@ public class LuatService {
         luatEntity.setId_user(userId);
         LuatEntity savedLuat = luatRepository.save(luatEntity);
         Long ma_luat = savedLuat.getMa_luat(); // Lấy ma_luat sau khi đã lưu thành công
-        
+
         // Sử dụng đối tượng BenhEntity để gán vào LienKetBenhLuatEntity
         LienKetBenhLuatEntity lienKetBenhLuatEntity = new LienKetBenhLuatEntity();
         lienKetBenhLuatEntity.setLuat(savedLuat); // Gán đối tượng LuatEntity vào LienKetBenhLuatEntity
@@ -66,7 +69,14 @@ public class LuatService {
             lienKetTrieuChungLuatEntity.setTrieuChung(trieuChungEntity);
             //System.out.println("ma tc "+trieuChungEntity);
             lienKetTrieuChungLuatRepository.save(lienKetTrieuChungLuatEntity);
-            
+
+        }
+        //4. tìm mã triệu trứng đã có trong bệnh bệnh khác để trả về cho luật loại 3
+        // Kiểm tra xem có triệu chứng nào khớp với bệnh nào không
+
+        for (Long ma_trieu_chung : maTrieuChungList) {
+            List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
+            System.out.println("ABC" + matchingBenhIds);
         }
 
     }

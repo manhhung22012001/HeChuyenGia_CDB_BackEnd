@@ -49,9 +49,9 @@ public interface TrieuChungRepository extends JpaRepository<TrieuChungEntity, Lo
 
     @Query("SELECT t FROM TrieuChungEntity t WHERE t.ten_trieu_chung IN :tenTrieuChungList")
     List<TrieuChungEntity> findByTenTrieuChungIn(@Param("tenTrieuChungList") List<String> tenTrieuChungList);
-    
+
     @Query("SELECT t FROM TrieuChungEntity t WHERE t.ma_trieu_chung IN :maTrieuChungList")
     List<TrieuChungEntity> findByTenTrieuChungIn1(@Param("maTrieuChungList") List<Long> maTrieuChungList);
 
-    
+   
 }
