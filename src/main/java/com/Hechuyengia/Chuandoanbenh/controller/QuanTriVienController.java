@@ -5,7 +5,6 @@
 package com.Hechuyengia.Chuandoanbenh.controller;
 
 import com.Hechuyengia.Chuandoanbenh.entity.BenhMoiEntity;
-import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungBenhMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserDetailEntity;
@@ -13,20 +12,15 @@ import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhMoiRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungMoiRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
-
 import com.Hechuyengia.Chuandoanbenh.repository.UserDetailRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
 import com.Hechuyengia.Chuandoanbenh.service.FileService;
 import com.Hechuyengia.Chuandoanbenh.service.UserService;
-import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +30,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,14 +48,12 @@ public class QuanTriVienController {
 
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    UserDetailRepository userDetailRepository;
+    
     @Autowired
     TrieuChungRepository trieuChungRepository;
     @Autowired
     BenhMoiRepository benhMoiRepository;
-    @Autowired
-    BenhMoiService benhMoiService;
+    
     @Autowired
     TrieuChungMoiRepository trieuChungMoiRepository;
     private final FileService fileService;
@@ -70,8 +61,7 @@ public class QuanTriVienController {
     public QuanTriVienController(FileService fileService) {
         this.fileService = fileService;
     }
-    @Autowired
-    private RestTemplate restTemplate;
+    
 
     @Autowired
     UserService userService;

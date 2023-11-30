@@ -188,8 +188,51 @@ public class KySuController {
                     nonNullMatchingBenhIdsList.add(ma_trieu_chung);
                 }
             }
-            System.out.println("Non-null matching BenhIds: " + nonNullMatchingBenhIdsList);
+            //System.out.println("Non-null matching BenhIds: " + nonNullMatchingBenhIdsList);
             responseBody.put("nonNullMatchingBenhIdsList", nonNullMatchingBenhIdsList);
+            responseBody.put("message", "Thêm luật thành công");
+        } else {
+            responseBody.put("message", "Use không tồn tại");
+        }
+        return responseBody;
+    }
+
+    @PutMapping("save-luat-loai-2/{userId}")
+    public Map<String, Object> saveLuatLoai2(
+            @PathVariable("userId") Long userId,
+            @RequestBody Map<String, Object> requestBody
+    ) {
+        Map<String, Object> responseBody = new HashMap<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<UserEntity> existingUser = userRepository.findById(userId);
+
+        if (existingUser.isPresent()) {
+            Long loai_luat = Long.valueOf(requestBody.get("loai_luat").toString());
+            Long ma_benh = Long.valueOf(requestBody.get("ma_benh").toString());
+            List<Integer> maTrieuChungListRaw = (List<Integer>) requestBody.get("ma_trieu_chung");
+            // Chuyển đổi từ Integer sang Long
+            List<Long> maTrieuChungList = new ArrayList<>();
+            for (Integer value : maTrieuChungListRaw) {
+                maTrieuChungList.add(value.longValue());
+            }
+            luatService.saveLuatLoai2(userId, loai_luat, ma_benh, maTrieuChungList);
+            // trả về danh sách
+            List<Long> nonNullMatchingBenhIdsList = new ArrayList<>();
+
+//            for (Long ma_trieu_chung : maTrieuChungList) {
+//                List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
+//                System.out.println("ABC" + matchingBenhIds);
+//
+//                // Check if matchingBenhIds is not null and add 1 to nonNullMatchingBenhIdsList, else add 0
+//                if (matchingBenhIds != null && !matchingBenhIds.isEmpty()) {
+////                    nonNullMatchingBenhIdsList.add(1);
+//                    nonNullMatchingBenhIdsList.add(0L);
+//                } else {
+//                    nonNullMatchingBenhIdsList.add(ma_trieu_chung);
+//                }
+//            }
+//            //System.out.println("Non-null matching BenhIds: " + nonNullMatchingBenhIdsList);
+//            responseBody.put("nonNullMatchingBenhIdsList", nonNullMatchingBenhIdsList);
             responseBody.put("message", "Thêm luật thành công");
         } else {
             responseBody.put("message", "Use không tồn tại");

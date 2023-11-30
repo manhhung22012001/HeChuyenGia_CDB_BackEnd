@@ -72,23 +72,40 @@ public class LuatService {
             lienKetTrieuChungLuatRepository.save(lienKetTrieuChungLuatEntity);
 
         }
-        //4. tìm mã triệu trứng đã có trong bệnh bệnh khác để trả về cho luật loại 3
-        // Kiểm tra xem có triệu chứng nào khớp với bệnh nào không
 
-//        List<Integer> nonNullMatchingBenhIdsList = new ArrayList<>();
-//
-//        for (Long ma_trieu_chung : maTrieuChungList) {
-//            List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
-//            System.out.println("ABC" + matchingBenhIds);
-//
-//            // Check if matchingBenhIds is not null and add 1 to nonNullMatchingBenhIdsList, else add 0
-//            if (matchingBenhIds != null && !matchingBenhIds.isEmpty()) {
-//                nonNullMatchingBenhIdsList.add(1);
-//            } else {
-//                nonNullMatchingBenhIdsList.add(0);
-//            }
-//        }
-//        System.out.println("Non-null matching BenhIds: " + nonNullMatchingBenhIdsList);
+    }
+
+    @Transactional
+    public void saveLuatLoai2(Long userId, Long loai_luat, Long ma_benh, List<Long> maTrieuChungList) {
+        //1. Lưu thông tin luật vào bảng `luat`
+        LuatEntity luatEntity = new LuatEntity();
+        //luatEntity.setTen_luat(ten_luat);
+        luatEntity.setLoai_luat(loai_luat);
+        luatEntity.setId_user(userId);
+        LuatEntity savedLuat = luatRepository.save(luatEntity);
+        Long ma_luat = savedLuat.getMa_luat(); // Lấy ma_luat sau khi đã lưu thành công
+
+        // Sử dụng đối tượng BenhEntity để gán vào LienKetBenhLuatEntity
+        LienKetBenhLuatEntity lienKetBenhLuatEntity = new LienKetBenhLuatEntity();
+        lienKetBenhLuatEntity.setLuat(savedLuat); // Gán đối tượng LuatEntity vào LienKetBenhLuatEntity
+        BenhEntity benhEnitity = benhRepository.findById(ma_benh).orElse(null);
+        if (benhEnitity != null) {
+            lienKetBenhLuatEntity.setMaBenh(benhEnitity);
+            //System.out.println("ma benhL "+benhEnitity);
+            LienKetBenhLuatEntity savedLienKetBenhLuat = lienKetBenhLuatRepository.save(lienKetBenhLuatEntity);
+        }
+        // 3. Lưu thông tin về mối quan hệ giữa luật và triệu chứng vào bảng `lien_ket_trieu_chung_luat`
+
+        LienKetTrieuChungLuatEntity lienKetTrieuChungLuatEntity = new LienKetTrieuChungLuatEntity();
+        lienKetTrieuChungLuatEntity.setLuat(savedLuat);
+        List<TrieuChungEntity> trieuChungEntities = trieuChungRepository.findByTenTrieuChungIn1(maTrieuChungList);
+        for (TrieuChungEntity trieuChungEntity : trieuChungEntities) {
+            lienKetTrieuChungLuatEntity.setLuat(savedLuat);
+            lienKetTrieuChungLuatEntity.setTrieuChung(trieuChungEntity);
+            //System.out.println("ma tc "+trieuChungEntity);
+            lienKetTrieuChungLuatRepository.save(lienKetTrieuChungLuatEntity);
+
+        }
 
     }
 
