@@ -197,7 +197,7 @@ public class KySuController {
         return responseBody;
     }
 
-    @PutMapping("save-luat-loai-2/{userId}")
+    @PutMapping("save-luat-loai-3/{userId}")
     public Map<String, Object> saveLuatLoai2(
             @PathVariable("userId") Long userId,
             @RequestBody Map<String, Object> requestBody

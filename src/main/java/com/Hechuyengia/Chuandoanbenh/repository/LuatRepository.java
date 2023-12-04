@@ -33,8 +33,8 @@ public interface LuatRepository extends JpaRepository<LuatEntity, Long> {
             + "JOIN trieu_chung_benh tb ON b.ma_benh = tb.ma_benh "
             + "JOIN trieu_chung tc ON tb.ma_trieu_chung = tc.ma_trieu_chung "
             + "WHERE tc.ma_trieu_chung IN (?1) "
-            + "GROUP BY b.ma_benh, b.ten_benh "
-            + "HAVING COUNT(DISTINCT tc.ma_trieu_chung) >=2;", nativeQuery = true)
+            + "GROUP BY b.ma_benh, b.ten_benh ;", nativeQuery = true)
+//            + "HAVING COUNT(DISTINCT tc.ma_trieu_chung) >=2;", nativeQuery = true)
     List<Object[]> findSymptomsInSelectedBenh1(List<String> danh_sach_tc);
 
 
