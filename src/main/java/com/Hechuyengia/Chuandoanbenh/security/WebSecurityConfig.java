@@ -62,14 +62,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         return new MappingJackson2HttpMessageConverter();
     }
-     @Bean
+
+    @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -87,25 +90,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/*").permitAll()//allow login api for all
                 .antMatchers("/diagnosis/*").permitAll()
                 .antMatchers("/diagnosis/trieuchung/*").permitAll()
-                
                 .antMatchers("/taskbar-qtv/*").authenticated()
                 .antMatchers("/taskbar-qtv/delete/*").authenticated()
                 .antMatchers("/taskbar-qtv/edit/*").authenticated()
                 .antMatchers("/taskbar-qtv/getFile/*").authenticated()
                 .antMatchers("/taskbar-qtv/edit-benh-moi-va-trieu-chung-moi/*").authenticated()
-              
+                .antMatchers("/taskbar-qtv/updateSatusUser/*").authenticated()
                 .antMatchers("/taskbar-cg/*").authenticated()
                 .antMatchers("/taskbar-cg/trieuchung/*").authenticated()
-                .antMatchers("/taskbar-cg/add-benh-va-trieu-chung/*").authenticated()                
+                .antMatchers("/taskbar-cg/add-benh-va-trieu-chung/*").authenticated()
                 .antMatchers("/taskbar-cg/getuserdetail/*").authenticated()
-                
                 .antMatchers("/taskbar-cg0/userinfo/*").authenticated()
                 .antMatchers("/taskbar-ks/*").authenticated()
                 .antMatchers("/taskbar-ks/checkTC/*").authenticated()
                 .antMatchers("/taskbar-ks/add-Benh-and_TC/*").authenticated()
                 .antMatchers("/taskbar-ks/save-luat-loai-1/*").authenticated()
                 .antMatchers("/taskbar-ks/save-luat-loai-3/*").authenticated()
-                
                 .anyRequest().authenticated();
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -13,6 +13,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
+import com.Hechuyengia.Chuandoanbenh.service.BenhService;
 import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
 import java.util.HashMap;
 import java.util.List;
@@ -58,14 +59,17 @@ public class ChuyenGiaController {
     BenhMoiService benhMoiService;
 
     @Autowired
+    BenhService benhService;
+    @Autowired
     private TrieuChungRepository trieuChungRepository;
-    
+
     private final TrieuChungService trieuchungService;
-    
+
     @Autowired
     public ChuyenGiaController(TrieuChungService trieuchungService) {
         this.trieuchungService = trieuchungService;
     }
+
     @CrossOrigin
     @GetMapping("/getall")
     public List<BenhEntity> list() {
@@ -84,54 +88,69 @@ public class ChuyenGiaController {
         return ResponseEntity.ok(result);
     }
 
-    
-
-    @CrossOrigin
     @PostMapping("/add-benh-va-trieu-chung/{userId}")
     public Map<String, Object> addBenhVaTrieuChung(
             @PathVariable("userId") Long userId,
             @RequestBody Map<String, Object> requestBody) {
-            Map<String, Object> responseBody = new HashMap<>();
+        Map<String, Object> responseBody = new HashMap<>();
         try {
-            
-            String tenBenh = (String) requestBody.get("ten_benh");
-            String loaiHe = (String) requestBody.get("loai_he");
-            String trang_thai =(String) requestBody.get("trang_thai");
-            String ghi_chu =(String) requestBody.get("ghi_chu");
-            // Assuming "trieu_chung" is a list of objects with a "trieu_chung" field
-            List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
-            
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList+ "trang thai: "+trang_thai+" Ghi chu"+ ghi_chu);
+            // Kiểm tra giá trị của 'ten_benh', 'loai_he' và 'trieu_chung'
+            if (requestBody.containsKey("ten_benh") && requestBody.containsKey("loai_he") && requestBody.containsKey("trieu_chung")) {
+                String tenBenh = (String) requestBody.get("ten_benh");
+                String loaiHe = (String) requestBody.get("loai_he");
+                String trang_thai = (String) requestBody.get("trang_thai");
+                String ghi_chu = (String) requestBody.get("ghi_chu");
 
-            Optional<UserEntity> existingUser = userRepository.findById(userId);
+                List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
 
-            // Trích xuất tên triệu chứng từ mỗi đối tượng Map
-            List<String> tenTrieuChungList = trieuChungList.stream()
-                    .map(trieuChung -> trieuChung.get("trieu_chung"))
-                    .collect(Collectors.toList());
+                // Kiểm tra xem giá trị 'ten_benh', 'loai_he' và 'trieu_chung' có rỗng không
+                if (tenBenh.isEmpty() || loaiHe.isEmpty() || trieuChungList.isEmpty()) {
+                    responseBody.put("message", "Ten benh, loai he hoac trieu chung rong");
+                    return responseBody;
+                }
 
-            benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, tenTrieuChungList, trang_thai, ghi_chu);
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList + "trang thai: " + trang_thai + " Ghi chu" + ghi_chu);
 
-             responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
+                Optional<UserEntity> existingUser = userRepository.findById(userId);
 
-        return responseBody;
+                List<String> tenTrieuChungList = trieuChungList.stream()
+                        .map(trieuChung -> trieuChung.get("trieu_chung"))
+                        .collect(Collectors.toList());
+
+                benhMoiService.saveBenhVaTrieuChung(existingUser.get(), loaiHe, tenBenh, tenTrieuChungList, trang_thai, ghi_chu);
+
+                responseBody.put("message", "Success");
+                return responseBody;
+            } else {
+                responseBody.put("message", "Thieu tham so ten_benh, loai_he hoac trieu_chung");
+                return responseBody;
+            }
         } catch (Exception e) {
-             responseBody.put("message", "Error"); // Thêm thông điệp lỗi vào body
-
-        return responseBody;
+            responseBody.put("message", "Error");
+            return responseBody;
         }
     }
 
-    @CrossOrigin
     @GetMapping("/suggest")
     public ResponseEntity<List<String>> suggestTrieuChung(@RequestParam("keyword") String keyword) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //System.out.println("Keywork nhan duoc la: "+keyword);
 //        keyword = "%" + keyword + "%";
         List<String> suggestedTrieuChung = trieuchungService.suggestTrieuChung(keyword);
         return ResponseEntity.ok(suggestedTrieuChung);
     }
-    
+
+    @GetMapping("/search")
+    public ResponseEntity<List<String>> suggestTenBenhByKeyWord(@RequestParam("keyword") String keyword) {
+        //System.out.println("Keywork nhan duoc la: " + keyword);
+
+        List<String> suggestedTrieuChung = benhService.suggestTenBenh(keyword);
+        //System.out.println("list: "+suggestedTrieuChung );
+        return ResponseEntity.ok(suggestedTrieuChung);
+
+    }
+
     @GetMapping("/getuserdetail/{userId}")
     public ResponseEntity<UserInfoDTO> getUserInfo(@PathVariable("userId") Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

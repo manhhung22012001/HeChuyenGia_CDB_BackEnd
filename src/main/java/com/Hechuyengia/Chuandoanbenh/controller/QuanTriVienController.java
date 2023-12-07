@@ -43,17 +43,16 @@ import org.springframework.web.client.RestTemplate;
  */
 @RestController
 @RequestMapping("/taskbar-qtv")
-
 public class QuanTriVienController {
 
     @Autowired
     UserRepository userRepository;
-    
+
     @Autowired
     TrieuChungRepository trieuChungRepository;
     @Autowired
     BenhMoiRepository benhMoiRepository;
-    
+
     @Autowired
     TrieuChungMoiRepository trieuChungMoiRepository;
     private final FileService fileService;
@@ -61,7 +60,6 @@ public class QuanTriVienController {
     public QuanTriVienController(FileService fileService) {
         this.fileService = fileService;
     }
-    
 
     @Autowired
     UserService userService;
@@ -150,7 +148,8 @@ public class QuanTriVienController {
             Optional<UserEntity> existingUser = userRepository.findById(userId);
             if (existingUser.isPresent()) {
                 UserDetailEntity userDetail = userService.getUserDetail(user_Id);
-                
+                UserEntity userEntity = userService.getUserEntity(user_Id);
+                //System.out.println("id: "+user_Id);
                 if (userDetail != null) {
                     Map<String, String> responseBody = new HashMap<>();
 
@@ -162,7 +161,8 @@ public class QuanTriVienController {
                     // Include hocham and hoc_vi fields in the response
                     responseBody.put("hoc_ham", userDetail.getHoc_ham());
                     responseBody.put("hoc_vi", userDetail.getHoc_vi());
-
+                    responseBody.put("status", userEntity.getStatus());
+                    //System.out.println("status" + userEntity.getStatus());
                     // Trả về response thành công nếu có file trong response body
                     if (!responseBody.isEmpty()) {
                         return ResponseEntity.ok().body(responseBody);
@@ -225,4 +225,36 @@ public class QuanTriVienController {
         }
     }
 
+    @PutMapping("/updateSatusUser/{userId}")
+    public Map<String, Object> updateStatusUser(@PathVariable("userId") Long userId,
+            @RequestBody Map<String, String> requestBody) {
+        String status = requestBody.get("status");
+        System.out.println("Status: " + status);
+        System.out.println("ID: " + userId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, Object> responseBody = new HashMap<>();
+        Optional<UserEntity> existingUser = userRepository.findById(userId);
+        if (existingUser.isPresent()) {
+            UserEntity userToUpdate = existingUser.get();
+            userToUpdate.setStatus(status);
+            UserEntity savedUser = userRepository.save(userToUpdate);
+            responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
+            return responseBody;
+        } else {
+            responseBody.put("message", "Error: User not found"); // Thêm thông điệp lỗi vào body
+            return responseBody;
+        }
+    }
+    
+    @GetMapping("/getCountStatus")
+    public Map<String, Object> updateStatusUser(){
+        Map<String, Object> responseBody = new HashMap<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long count = userRepository.countByStatusEqualsZero();
+        //System.out.println("count "+ count);
+        responseBody.put("countByStatusEqualsZero", count);
+        return responseBody;
+    }
+    
+    
 }

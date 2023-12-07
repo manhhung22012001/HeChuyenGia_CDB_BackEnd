@@ -38,4 +38,8 @@ public class BenhService {
 
         return result;
     }
+    
+    public List<String> suggestTenBenh(String keyword) {
+        return benhRepository.findByTen_benhContainingIgnoreCase(keyword);
+    }
 }

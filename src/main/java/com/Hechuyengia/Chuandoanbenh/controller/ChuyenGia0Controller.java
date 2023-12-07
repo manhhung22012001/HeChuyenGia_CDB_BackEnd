@@ -55,13 +55,14 @@ public class ChuyenGia0Controller {
             @RequestParam(value = "chungChiHanhNghe", required = false) MultipartFile chungChiHanhNghe,
             @RequestParam(value = "chungNhanChuyenKhoa", required = false) MultipartFile chungNhanChuyenKhoa,
             @RequestParam(value = "hoc_ham", required = false) String hoc_ham,
-            @RequestParam(value = "hoc_vi", required = false) String hoc_vi
+            @RequestParam(value = "hoc_vi", required = false) String hoc_vi,
+            @RequestParam(value = "status", required = false) String status
     ) {
         Map<String, Object> responseBody = new HashMap<>();
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String result = userService.saveUserDetailsAndFiles(userId, anhdaidien, bangTotNghiepYKhoa, chungChiHanhNghe, chungNhanChuyenKhoa, hoc_ham, hoc_vi);
-            System.out.println("hoc ham: "+hoc_ham+" hoc vi: "+hoc_vi);
+            String result = userService.saveUserDetailsAndFiles(userId, anhdaidien, bangTotNghiepYKhoa, chungChiHanhNghe, chungNhanChuyenKhoa, hoc_ham, hoc_vi,status);
+            System.out.println("hoc ham: "+hoc_ham+" hoc vi: "+hoc_vi+" status"+ status);
             responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
 
             return responseBody;

@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,6 +45,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     UserRepository repo;
+    
 
     @Autowired
     private UserDetailRepository userDetailRepository;
@@ -90,7 +93,7 @@ public class UserService implements UserDetailsService {
         return repo.getUserInfoById(userId);
     }
 
-    public String saveUserDetailsAndFiles(Long userId, MultipartFile anhdaidien, MultipartFile bangTotNghiepYKhoa, MultipartFile chungChiHanhNghe, MultipartFile chungNhanChuyenKhoa,String hoc_ham, String hoc_vi) {
+    public String saveUserDetailsAndFiles(Long userId, MultipartFile anhdaidien, MultipartFile bangTotNghiepYKhoa, MultipartFile chungChiHanhNghe, MultipartFile chungNhanChuyenKhoa, String hoc_ham, String hoc_vi, String status) {
         UserEntity user = repo.findById(userId).orElse(null);
 
         if (user != null) {
@@ -112,6 +115,14 @@ public class UserService implements UserDetailsService {
                 userDetail.setHoc_ham(hoc_ham);
 
                 userDetailRepository.save(userDetail);
+
+                Optional<UserEntity> existingUser = repo.findById(userId);
+                if (existingUser.isPresent()) {
+                    UserEntity userToUpdate = existingUser.get();
+                    userToUpdate.setStatus(status);
+                    UserEntity savedUser = repo.save(userToUpdate);
+
+                }
 
                 return "User details and files saved successfully!";
             } catch (IOException e) {
@@ -149,5 +160,7 @@ public class UserService implements UserDetailsService {
     public UserDetailEntity getUserDetail(Long userId) {
         return userDetailRepository.findByUserId(userId);
     }
-
+    public UserEntity getUserEntity(Long userId) {
+        return repo.findByUserId(userId);
+    }
 }
