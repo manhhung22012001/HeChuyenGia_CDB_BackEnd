@@ -6,6 +6,7 @@ package com.Hechuyengia.Chuandoanbenh.service;
 
 import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.BenhMoiEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.BenhSuggestEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungBenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungBenhMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
@@ -13,6 +14,7 @@ import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungMoiEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhMoiRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.BenhSuggestRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class TrieuChungService {
 
     @Autowired
     TrieuChungRepository trieuChungRepository;
+
+    @Autowired
+    BenhSuggestRepository benhSuggestRepository;
 
     @Autowired
     public TrieuChungService(DataSource dataSource, TrieuChungRepository trieuchungRepository) {
@@ -108,7 +113,7 @@ public class TrieuChungService {
                     TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
                     trieuChungBenhEntity.setBenh(savedBenh);
                     trieuChungBenhEntity.setTrieuChung(existingTrieuChung);
-                    System.out.println("exit: "+ existingTrieuChung);
+                    System.out.println("exit: " + existingTrieuChung);
                     trieuChungBenhRepository.save(trieuChungBenhEntity);
 //                    Long ma_benh = savedBenh.getMa_benh();
 //                    Long ma_trieu_chung = existingTrieuChung.getMa_trieu_chung();
@@ -124,4 +129,54 @@ public class TrieuChungService {
         }
     }
 
+    @Transactional
+    public void saveTrieuChungSuggest(Long ma_benh, List<String> trieuChungList, Long trang_thai, Long ma_benh_suggest) {
+        // Tạo danh sách triệu chứng đã tồn tại trong cơ sở dữ liệu
+        //System.out.println("Trieu chung chuyen vào: "+ trieuChungList);
+        List<TrieuChungEntity> existingTrieuChungEntities = trieuChungRepository.findByTenTrieuChungIn(trieuChungList);
+        BenhEntity existingBenhEntity = benhRepository.findByMaBenh(ma_benh);
+        for (String tenTrieuChung : trieuChungList) {
+            TrieuChungEntity existingTrieuChung = existingTrieuChungEntities.stream()
+                    .filter(trieuChung -> tenTrieuChung.equals(trieuChung.getTen_trieu_chung()))
+                    .findFirst()
+                    .orElse(null);
+
+            //System.out.println("Trieu chung ton tai "+ existingTrieuChung);
+            //System.out.println("Benh ton tai "+ existingBenhEntity);
+            if (existingTrieuChung == null) {
+                // Nếu triệu chứng không tồn tại, thêm mới triệu chứng vào bảng triệu chứng và triệu chứng bệnh
+                TrieuChungEntity trieuChungEntity = new TrieuChungEntity();
+                trieuChungEntity.setTen_trieu_chung(tenTrieuChung);
+                TrieuChungEntity savedTrieuChung = trieuChungRepository.save(trieuChungEntity);
+
+                // Liên kết triệu chứng mới với bệnh
+                TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
+                trieuChungBenhEntity.setBenh(existingBenhEntity);
+                trieuChungBenhEntity.setTrieuChung(savedTrieuChung);
+                trieuChungBenhRepository.save(trieuChungBenhEntity);
+
+                Optional<BenhSuggestEntity> existingBenh = benhSuggestRepository.findById(ma_benh_suggest);
+                if (existingBenh.isPresent()) {
+                    BenhSuggestEntity benhToUpdate = existingBenh.get();
+                    benhToUpdate.setTrang_thai(trang_thai);
+                    BenhSuggestEntity savedBenh = benhSuggestRepository.save(benhToUpdate);
+
+                }
+
+            } else {
+                // nếu đã tồn tại thì chỉ thên vào bảng triệu chứng bệnh
+                TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
+                trieuChungBenhEntity.setBenh(existingBenhEntity);
+                trieuChungBenhEntity.setTrieuChung(existingTrieuChung);
+                trieuChungBenhRepository.save(trieuChungBenhEntity);
+                Optional<BenhSuggestEntity> existingBenh = benhSuggestRepository.findById(ma_benh_suggest);
+                if (existingBenh.isPresent()) {
+                    BenhSuggestEntity benhToUpdate = existingBenh.get();
+                    benhToUpdate.setTrang_thai(trang_thai);
+                    BenhSuggestEntity savedBenh = benhSuggestRepository.save(benhToUpdate);
+
+                }
+            }
+        }
+    }
 }

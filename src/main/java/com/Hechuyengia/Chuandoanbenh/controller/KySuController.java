@@ -6,9 +6,11 @@ package com.Hechuyengia.Chuandoanbenh.controller;
 
 import com.Hechuyengia.Chuandoanbenh.DTO.UserInfoDTO;
 import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.BenhSuggestEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.BenhSuggestRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
@@ -53,7 +55,7 @@ public class KySuController {
     @Autowired
     TrieuChungService trieuChungService;
     @Autowired
-    BenhRepository benhRepository;
+    BenhSuggestRepository benhSuggestRepository;
     @Autowired
     BenhService benhService;
     @Autowired
@@ -219,20 +221,6 @@ public class KySuController {
             // trả về danh sách
             List<Long> nonNullMatchingBenhIdsList = new ArrayList<>();
 
-//            for (Long ma_trieu_chung : maTrieuChungList) {
-//                List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
-//                System.out.println("ABC" + matchingBenhIds);
-//
-//                // Check if matchingBenhIds is not null and add 1 to nonNullMatchingBenhIdsList, else add 0
-//                if (matchingBenhIds != null && !matchingBenhIds.isEmpty()) {
-////                    nonNullMatchingBenhIdsList.add(1);
-//                    nonNullMatchingBenhIdsList.add(0L);
-//                } else {
-//                    nonNullMatchingBenhIdsList.add(ma_trieu_chung);
-//                }
-//            }
-//            //System.out.println("Non-null matching BenhIds: " + nonNullMatchingBenhIdsList);
-//            responseBody.put("nonNullMatchingBenhIdsList", nonNullMatchingBenhIdsList);
             responseBody.put("message", "Thêm luật thành công");
         } else {
             responseBody.put("message", "Use không tồn tại");
@@ -240,4 +228,57 @@ public class KySuController {
         return responseBody;
     }
 
+    @GetMapping("/getallBenhOfTtrieuChungMoi")
+    public List<BenhSuggestEntity> listBenh() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return benhSuggestRepository.findAll();
+    }
+
+    @GetMapping("/trieuChungSuggestMoi/{userId}")
+    public ResponseEntity<List<Object[]>> getTrieuChungSuggestMoiByMaBenhCu(@PathVariable Long userId,
+            @RequestParam(value = "ma_benh_suggest") Long ma_benh_suggest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<UserEntity> existingUser = userRepository.findById(userId);
+        if (existingUser.isPresent()) {
+            List<Object[]> trieuChungSuggestMoi = benhSuggestRepository.findTrieuChungSuggestMoiByMaBenhMoi(ma_benh_suggest);
+            if (trieuChungSuggestMoi != null && !trieuChungSuggestMoi.isEmpty()) {
+                return ResponseEntity.ok(trieuChungSuggestMoi);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/saveTrieuChungSuggestIntoTrieuChungBenh")
+    public Map<String, Object> saveTrieuChungSuggest(@RequestBody Map<String, Object> requestBody) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, Object> responseBody = new HashMap<>();
+        try {
+            List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
+            Integer ma_benh_int = (Integer) requestBody.get("ma_benh");
+            Long ma_benh = ma_benh_int != null ? ma_benh_int.longValue() : null;
+            Integer ma_benh_suggest_int = (Integer) requestBody.get("ma_benh_suggest");
+            Long ma_benh_suggest = ma_benh_suggest_int != null ? ma_benh_suggest_int.longValue() : null;
+            Integer trang_thai_int = (Integer) requestBody.get("trang_thai");
+            Long trang_thai = trang_thai_int != null ? trang_thai_int.longValue() : null;
+            
+            System.out.println("ma benh suggest " + ma_benh_suggest);
+            // xử lý
+            // trích xuất tên triệu chứng từ map
+            List<String> tenTrieuChungList = trieuChungList.stream()
+                    .map(trieuChung -> trieuChung.get("tenTrieuChung"))
+                    .collect(Collectors.toList());
+            trieuChungService.saveTrieuChungSuggest(ma_benh, tenTrieuChungList,trang_thai,ma_benh_suggest);
+            responseBody.put("message", "Thêm Triệu Chứng thành công");
+            
+        }
+        catch(Exception e){
+            responseBody.put("error", "Thêm Triệu Chứng Thất Bại");
+            
+        }
+        return responseBody;
+    }
 }

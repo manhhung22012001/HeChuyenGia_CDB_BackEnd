@@ -37,7 +37,11 @@ public interface BenhRepository extends JpaRepository<BenhEntity, Long> {
             + "WHERE m.ma_luat IS NULL "
             + "AND t.ten_benh = :ten_benh", nativeQuery = true)
     List<Object[]> findBenhByTenBenh(@Param("ten_benh") String ten_benh);
-    
+
     @Query("SELECT tc.ten_benh FROM BenhEntity tc WHERE LOWER(tc.ten_benh) LIKE LOWER(:keyword)")
     public List<String> findByTen_benhContainingIgnoreCase(@Param("keyword") String keyword);
+
+    @Query("SELECT t FROM BenhEntity t WHERE t.ma_benh = :ma_benh")
+    BenhEntity findByMaBenh(@Param("ma_benh") Long ma_benh);
+
 }

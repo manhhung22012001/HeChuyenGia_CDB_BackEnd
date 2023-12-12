@@ -14,7 +14,9 @@ import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.BenhMoiService;
 import com.Hechuyengia.Chuandoanbenh.service.BenhService;
+import com.Hechuyengia.Chuandoanbenh.service.BenhSuggestService;
 import com.Hechuyengia.Chuandoanbenh.service.TrieuChungService;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +62,9 @@ public class ChuyenGiaController {
 
     @Autowired
     BenhService benhService;
+
     @Autowired
-    private TrieuChungRepository trieuChungRepository;
+    BenhSuggestService benhSuggestService;
 
     private final TrieuChungService trieuchungService;
 
@@ -102,7 +105,7 @@ public class ChuyenGiaController {
                 String ghi_chu = (String) requestBody.get("ghi_chu");
 
                 List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
-
+                System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList + "trang thai: " + trang_thai + " Ghi chu" + ghi_chu);
                 // Kiểm tra xem giá trị 'ten_benh', 'loai_he' và 'trieu_chung' có rỗng không
                 if (tenBenh.isEmpty() || loaiHe.isEmpty() || trieuChungList.isEmpty()) {
                     responseBody.put("message", "Ten benh, loai he hoac trieu chung rong");
@@ -110,7 +113,6 @@ public class ChuyenGiaController {
                 }
 
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList + "trang thai: " + trang_thai + " Ghi chu" + ghi_chu);
 
                 Optional<UserEntity> existingUser = userRepository.findById(userId);
 
@@ -144,7 +146,7 @@ public class ChuyenGiaController {
     @GetMapping("/search")
     public ResponseEntity<List<String>> suggestTenBenhByKeyWord(@RequestParam("keyword") String keyword) {
         //System.out.println("Keywork nhan duoc la: " + keyword);
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<String> suggestedTrieuChung = benhService.suggestTenBenh(keyword);
         //System.out.println("list: "+suggestedTrieuChung );
         return ResponseEntity.ok(suggestedTrieuChung);
@@ -161,5 +163,40 @@ public class ChuyenGiaController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/suggest-add-new-TC/{userId}")
+    public Map<String, Object> suggestAddNewTC(@PathVariable("userId") Long userId, @RequestBody Map<String, Object> requestBody) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, Object> responseBody = new HashMap<>();
+        try {
+            if (requestBody.containsKey("ten_benh") && requestBody.containsKey("ma_benh") && requestBody.containsKey("trieu_chung")) {
+                String ten_benh = (String) requestBody.get("ten_benh");
+                Integer ma_benh_int = (Integer) requestBody.get("ma_benh");
+                Long ma_benh = ma_benh_int != null ? ma_benh_int.longValue() : null;
+                Integer trang_thai_int = (Integer) requestBody.get("trang_thai");
+                Long trang_thai = trang_thai_int != null ? trang_thai_int.longValue() : null;
+                List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
+                System.out.println("ma benh: " + ma_benh + " Ten benh: " + ten_benh + " Danh sach TC: " + trieuChungList + " id user " + userId + "Trang thai:" + trang_thai);
+
+                Optional<UserEntity> existingUser = userRepository.findById(userId);
+
+                List<String> tenTrieuChungList = trieuChungList.stream()
+                        .map(trieuChung -> trieuChung.get("trieu_chung"))
+                        .collect(Collectors.toList());
+                benhSuggestService.saveListTrieuChungSuggest(existingUser.get(), ten_benh, ma_benh, trang_thai, tenTrieuChungList);
+                responseBody.put("message", "Success");
+                return responseBody;
+            } else {
+                responseBody.put("message", "Thieu tham so ten_benh, loai_he hoac trieu_chung");
+                return responseBody;
+            }
+
+        } catch (Exception e) {
+            responseBody.put("message", "Error");
+            return responseBody;
+            
+        }
+
     }
 }

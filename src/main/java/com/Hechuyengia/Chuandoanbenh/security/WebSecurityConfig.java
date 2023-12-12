@@ -100,12 +100,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/taskbar-cg/trieuchung/*").authenticated()
                 .antMatchers("/taskbar-cg/add-benh-va-trieu-chung/*").authenticated()
                 .antMatchers("/taskbar-cg/getuserdetail/*").authenticated()
+                .antMatchers("/taskbar-cg/suggest-add-new-TC/*").authenticated()
+                
                 .antMatchers("/taskbar-cg0/userinfo/*").authenticated()
                 .antMatchers("/taskbar-ks/*").authenticated()
                 .antMatchers("/taskbar-ks/checkTC/*").authenticated()
                 .antMatchers("/taskbar-ks/add-Benh-and_TC/*").authenticated()
                 .antMatchers("/taskbar-ks/save-luat-loai-1/*").authenticated()
                 .antMatchers("/taskbar-ks/save-luat-loai-3/*").authenticated()
+                .antMatchers("/taskbar-ks/trieuChungSuggestMoi/*").authenticated()
+                
                 .anyRequest().authenticated();
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
