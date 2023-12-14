@@ -84,7 +84,7 @@ public class ChuyenGiaController {
     @CrossOrigin
     @GetMapping("/getall12/{loai_he}")
     public ResponseEntity<List<BenhEntity>> list(@PathVariable String loai_he) {
-        System.out.println("Ma loai he nhan duoc la " + loai_he);
+        //System.out.println("Ma loai he nhan duoc la " + loai_he);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<BenhEntity> result = benhRepository.findByLoaiHe(loai_he);
         // ... (process result if needed)
@@ -105,7 +105,7 @@ public class ChuyenGiaController {
                 String ghi_chu = (String) requestBody.get("ghi_chu");
 
                 List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
-                System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList + "trang thai: " + trang_thai + " Ghi chu" + ghi_chu);
+                //System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList + "trang thai: " + trang_thai + " Ghi chu" + ghi_chu);
                 // Kiểm tra xem giá trị 'ten_benh', 'loai_he' và 'trieu_chung' có rỗng không
                 if (tenBenh.isEmpty() || loaiHe.isEmpty() || trieuChungList.isEmpty()) {
                     responseBody.put("message", "Ten benh, loai he hoac trieu chung rong");
@@ -184,19 +184,29 @@ public class ChuyenGiaController {
                 List<String> tenTrieuChungList = trieuChungList.stream()
                         .map(trieuChung -> trieuChung.get("trieu_chung"))
                         .collect(Collectors.toList());
-                benhSuggestService.saveListTrieuChungSuggest(existingUser.get(), ten_benh, ma_benh, trang_thai, tenTrieuChungList);
-                responseBody.put("message", "Success");
-                return responseBody;
+                
+                List<String> result = benhSuggestService.saveListTrieuChungSuggest(existingUser.get(), ten_benh, ma_benh, trang_thai, tenTrieuChungList);
+                System.out.println("Thong bao nhan duoc: "+ result);
+                
+                if (result.contains("Success")) {
+                    responseBody.put("message", "Success");
+                } else {
+                    responseBody.put("message", "Error: Trung trieu chung");
+                    responseBody.put("duplicatedSymptoms", result); // Thêm danh sách các triệu chứng trùng vào responseBody
+                }
+
             } else {
                 responseBody.put("message", "Thieu tham so ten_benh, loai_he hoac trieu_chung");
-                return responseBody;
+                
             }
 
         } catch (Exception e) {
             responseBody.put("message", "Error");
-            return responseBody;
             
+
         }
+        return responseBody;
 
     }
+
 }

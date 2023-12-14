@@ -62,7 +62,7 @@ public class ChuyenGia0Controller {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String result = userService.saveUserDetailsAndFiles(userId, anhdaidien, bangTotNghiepYKhoa, chungChiHanhNghe, chungNhanChuyenKhoa, hoc_ham, hoc_vi,status);
-            System.out.println("hoc ham: "+hoc_ham+" hoc vi: "+hoc_vi+" status"+ status);
+            //System.out.println("hoc ham: "+hoc_ham+" hoc vi: "+hoc_vi+" status"+ status);
             responseBody.put("message", "Success"); // Thêm thông điệp thành công vào body
 
             return responseBody;

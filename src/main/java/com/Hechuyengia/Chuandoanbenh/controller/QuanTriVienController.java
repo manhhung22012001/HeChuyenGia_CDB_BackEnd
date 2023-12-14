@@ -186,7 +186,7 @@ public class QuanTriVienController {
             @PathVariable("userId") Long userId,
             @RequestBody Map<String, Object> editInfo) {
         Map<String, Object> responseBody = new HashMap<>();
-        System.out.println("Nhan duoc " + editInfo);
+        //System.out.println("Nhan duoc " + editInfo);
         Long ma_trieu_chung_moi = Long.valueOf(editInfo.get("ma_trieu_chung_moi").toString());
         Long ma_benh_moi = Long.valueOf(editInfo.get("ma_benh_moi").toString());
         String ten_trieu_chung_moi = (String) editInfo.get("ten_trieu_chung_moi");
@@ -229,8 +229,8 @@ public class QuanTriVienController {
     public Map<String, Object> updateStatusUser(@PathVariable("userId") Long userId,
             @RequestBody Map<String, String> requestBody) {
         String status = requestBody.get("status");
-        System.out.println("Status: " + status);
-        System.out.println("ID: " + userId);
+        //System.out.println("Status: " + status);
+        //System.out.println("ID: " + userId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> responseBody = new HashMap<>();
         Optional<UserEntity> existingUser = userRepository.findById(userId);

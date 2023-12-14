@@ -4,8 +4,10 @@
  */
 package com.Hechuyengia.Chuandoanbenh.repository;
 
+import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungBenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungBenhId;
+import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +27,11 @@ public interface TrieuChungBenhRepository extends JpaRepository<TrieuChungBenhEn
             + "AND tcb.benh.id <> :ma_benh"
     )
     List<Long> findBenhIdsByTrieuChungList(@Param("ma_trieu_chung") Long ma_trieu_chung, @Param("ma_benh") Long ma_benh);
-}
 
+    @Query("SELECT COUNT(tcb) > 0 "
+            + "FROM TrieuChungBenhEntity tcb "
+            + "WHERE tcb.benh = :existingBenh AND tcb.trieuChung = :existingTrieuChung")
+    boolean existsByBenhAndTrieuChung(@Param("existingBenh") BenhEntity existingBenh,
+            @Param("existingTrieuChung") TrieuChungEntity existingTrieuChung);
+
+}

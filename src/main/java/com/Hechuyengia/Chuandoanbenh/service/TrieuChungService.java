@@ -17,10 +17,12 @@ import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhSuggestRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.json.JSONObject;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
@@ -113,7 +115,7 @@ public class TrieuChungService {
                     TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
                     trieuChungBenhEntity.setBenh(savedBenh);
                     trieuChungBenhEntity.setTrieuChung(existingTrieuChung);
-                    System.out.println("exit: " + existingTrieuChung);
+                    //System.out.println("exit: " + existingTrieuChung);
                     trieuChungBenhRepository.save(trieuChungBenhEntity);
 //                    Long ma_benh = savedBenh.getMa_benh();
 //                    Long ma_trieu_chung = existingTrieuChung.getMa_trieu_chung();
@@ -130,11 +132,13 @@ public class TrieuChungService {
     }
 
     @Transactional
-    public void saveTrieuChungSuggest(Long ma_benh, List<String> trieuChungList, Long trang_thai, Long ma_benh_suggest) {
+    public String saveTrieuChungSuggest(Long ma_benh, List<String> trieuChungList, Long trang_thai, Long ma_benh_suggest) {
         // Tạo danh sách triệu chứng đã tồn tại trong cơ sở dữ liệu
         //System.out.println("Trieu chung chuyen vào: "+ trieuChungList);
         List<TrieuChungEntity> existingTrieuChungEntities = trieuChungRepository.findByTenTrieuChungIn(trieuChungList);
         BenhEntity existingBenhEntity = benhRepository.findByMaBenh(ma_benh);
+        // Tạo một JSONObject để lưu trữ thông tin triệu chứng và mã tương ứng để có thể thêm luật
+        JSONObject trieuChungJSON = new JSONObject();
         for (String tenTrieuChung : trieuChungList) {
             TrieuChungEntity existingTrieuChung = existingTrieuChungEntities.stream()
                     .filter(trieuChung -> tenTrieuChung.equals(trieuChung.getTen_trieu_chung()))
@@ -148,7 +152,7 @@ public class TrieuChungService {
                 TrieuChungEntity trieuChungEntity = new TrieuChungEntity();
                 trieuChungEntity.setTen_trieu_chung(tenTrieuChung);
                 TrieuChungEntity savedTrieuChung = trieuChungRepository.save(trieuChungEntity);
-
+                trieuChungJSON.put("Chưa có trong csdl: " + tenTrieuChung, savedTrieuChung.getMa_trieu_chung());
                 // Liên kết triệu chứng mới với bệnh
                 TrieuChungBenhEntity trieuChungBenhEntity = new TrieuChungBenhEntity();
                 trieuChungBenhEntity.setBenh(existingBenhEntity);
@@ -169,6 +173,7 @@ public class TrieuChungService {
                 trieuChungBenhEntity.setBenh(existingBenhEntity);
                 trieuChungBenhEntity.setTrieuChung(existingTrieuChung);
                 trieuChungBenhRepository.save(trieuChungBenhEntity);
+                trieuChungJSON.put("TC đã có trong csdl: " + tenTrieuChung, existingTrieuChung.getMa_trieu_chung());
                 Optional<BenhSuggestEntity> existingBenh = benhSuggestRepository.findById(ma_benh_suggest);
                 if (existingBenh.isPresent()) {
                     BenhSuggestEntity benhToUpdate = existingBenh.get();
@@ -178,5 +183,7 @@ public class TrieuChungService {
                 }
             }
         }
+        System.out.println("Hash Map: " + trieuChungJSON);
+        return trieuChungJSON.toString();
     }
 }
