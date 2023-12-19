@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -31,8 +33,9 @@ public class BenhEntity implements Serializable {
     @Column(name = "loai_he")
     private String loai_he;
 
-    @Column(name = "id_user")
-    private Long id_user;
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private UserEntity userEntity; // Định nghĩa mối quan hệ với bảng người dùng
 
     public BenhEntity() {
     }
@@ -43,12 +46,14 @@ public class BenhEntity implements Serializable {
         this.loai_he = loai_he;
     }
 
-    public BenhEntity(Long ma_benh, String ten_benh, String loai_he, Long id_user) {
+    public BenhEntity(Long ma_benh, String ten_benh, String loai_he, UserEntity userEntity) {
         this.ma_benh = ma_benh;
         this.ten_benh = ten_benh;
         this.loai_he = loai_he;
-        this.id_user = id_user;
+        this.userEntity = userEntity;
     }
+
+    
 
    
 
@@ -87,12 +92,14 @@ public class BenhEntity implements Serializable {
         this.loai_he = loai_he;
     }
 
-    public Long getId_user() {
-        return id_user;
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
-    public void setId_user(Long id_user) {
-        this.id_user = id_user;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
+
+    
 
 }

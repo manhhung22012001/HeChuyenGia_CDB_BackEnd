@@ -9,12 +9,14 @@ import com.Hechuyengia.Chuandoanbenh.entity.LienKetBenhLuatEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.LienKetTrieuChungLuatEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.LuatEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.LienKetBenhLuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.LienKetTrieuChungLuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.LuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -53,13 +55,17 @@ public class LuatService {
     @Autowired
     TrieuChungBenhRepository trieuChungBenhRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Transactional
     public void saveLuatLoai1(Long userId, Long loai_luat, Long ma_benh, List<Long> maTrieuChungList) {
         //1. Lưu thông tin luật vào bảng `luat`
         LuatEntity luatEntity = new LuatEntity();
         //luatEntity.setTen_luat(ten_luat);
         luatEntity.setLoai_luat(loai_luat);
-        luatEntity.setId_user(userId);
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        luatEntity.setUserEntity(userEntity);
         LuatEntity savedLuat = luatRepository.save(luatEntity);
         Long ma_luat = savedLuat.getMa_luat(); // Lấy ma_luat sau khi đã lưu thành công
 
@@ -93,7 +99,8 @@ public class LuatService {
         LuatEntity luatEntity = new LuatEntity();
         //luatEntity.setTen_luat(ten_luat);
         luatEntity.setLoai_luat(loai_luat);
-        luatEntity.setId_user(userId);
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        luatEntity.setUserEntity(userEntity);
         LuatEntity savedLuat = luatRepository.save(luatEntity);
         Long ma_luat = savedLuat.getMa_luat(); // Lấy ma_luat sau khi đã lưu thành công
 
@@ -190,7 +197,7 @@ public class LuatService {
                     lienKetTrieuChungLuatEntity.setTrieuChung(trieuChungEntity);
                     lienKetTrieuChungLuatEntity.setLuat(luatEntity);
                     lienKetTrieuChungLuatRepository.save(lienKetTrieuChungLuatEntity);
-                    
+
                 }
             }
         } else {
@@ -200,15 +207,16 @@ public class LuatService {
                     LuatEntity luatEntity = new LuatEntity();
                     //luatEntity.setTen_luat(ten_luat);
                     luatEntity.setLoai_luat(3L);
-                    luatEntity.setId_user(userId);
+                    UserEntity userEntity = userRepository.findById(userId).orElse(null);
+                    luatEntity.setUserEntity(userEntity);
                     LuatEntity savedLuat = luatRepository.save(luatEntity);
                     //2. tìm bệnh entity
                     BenhEntity benhEnitity = benhRepository.findById(ma_benh).orElse(null);
-                    
+
                     //3. thêm liên kết bệnh luật mới
-                    LienKetBenhLuatEntity lienKetBenhLuatEntity = new LienKetBenhLuatEntity();                    
+                    LienKetBenhLuatEntity lienKetBenhLuatEntity = new LienKetBenhLuatEntity();
                     lienKetBenhLuatEntity.setLuat(savedLuat); // Gán đối tượng LuatEntity vào LienKetBenhLuatEntity
-                    lienKetBenhLuatEntity.setMaBenh(benhEnitity);                  
+                    lienKetBenhLuatEntity.setMaBenh(benhEnitity);
                     LienKetBenhLuatEntity savedLienKetBenhLuat = lienKetBenhLuatRepository.save(lienKetBenhLuatEntity);
                     //4. tìm triệu chứng
                     TrieuChungEntity trieuChungEntity = trieuChungRepository.findById(value).orElse(null);

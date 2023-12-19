@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 /**
  *
@@ -29,15 +31,18 @@ public class LuatEntity implements Serializable{
     @Column(name = "loai_luat")
     private Long loai_luat;
     
-    @Column(name = "id_user")
-    private Long id_user;
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private UserEntity userEntity; // Định nghĩa mối quan hệ với bảng người dùng
 
-    public LuatEntity(Long ma_luat, String ten_luat, Long loai_luat, Long id_user) {
+    public LuatEntity(Long ma_luat, String ten_luat, Long loai_luat, UserEntity userEntity) {
         this.ma_luat = ma_luat;
         this.ten_luat = ten_luat;
         this.loai_luat = loai_luat;
-        this.id_user = id_user;
+        this.userEntity = userEntity;
     }
+
+  
 
     public LuatEntity() {
     }
@@ -66,13 +71,15 @@ public class LuatEntity implements Serializable{
         this.loai_luat = loai_luat;
     }
 
-    public Long getId_user() {
-        return id_user;
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
-    public void setId_user(Long id_user) {
-        this.id_user = id_user;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
+
+   
 
     
     

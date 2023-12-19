@@ -17,6 +17,7 @@ import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhSuggestRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,9 @@ public class TrieuChungService {
 
     @Autowired
     BenhSuggestRepository benhSuggestRepository;
+    
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     public TrieuChungService(DataSource dataSource, TrieuChungRepository trieuchungRepository) {
@@ -71,14 +75,16 @@ public class TrieuChungService {
     }
 
     @Transactional
-    public void saveBenhVaTrieuChung(Long userEntity, String loaiHe, String tenBenh, List<String> trieuChungList, String ghi_chu) {
+    public void saveBenhVaTrieuChung(Long userId, String loaiHe, String tenBenh, List<String> trieuChungList, String ghi_chu) {
         try {
             BenhEntity benhEntity = new BenhEntity();
             // Tạo mới đối tượng BenhMoiEntity và lưu vào bảng bệnh mới
 
             benhEntity.setTen_benh(tenBenh);
             benhEntity.setLoai_he(loaiHe);
-            benhEntity.setId_user(userEntity);
+           
+            UserEntity userEntity = userRepository.findById(userId).orElse(null);        
+            benhEntity.setUserEntity(userEntity);
 
             BenhEntity savedBenh = benhRepository.save(benhEntity);
 

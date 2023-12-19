@@ -115,7 +115,7 @@ public class KySuController {
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             //System.out.println(" id la: " + userId + " ten_benh: " + tenBenh + " loaiHe: " + loaiHe + " trieuChungList: " + trieuChungList);
-            Optional<UserEntity> existingUser = userRepository.findById(userId);
+            //Optional<UserEntity> existingUser = userRepository.findById(userId);
 
             // Trích xuất tên triệu chứng từ mỗi đối tượng Map
             List<String> tenTrieuChungList = trieuChungList.stream()
