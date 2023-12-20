@@ -28,6 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  *
@@ -54,6 +55,7 @@ public class LuatService {
     TrieuChungRepository trieuChungRepository;
     @Autowired
     TrieuChungBenhRepository trieuChungBenhRepository;
+    
 
     @Autowired
     UserRepository userRepository;
@@ -180,6 +182,30 @@ public class LuatService {
                     lienKetTrieuChungLuatEntity.setTrieuChung(trieuChungEntity);
                     lienKetTrieuChungLuatEntity.setLuat(luatEntity);
                     lienKetTrieuChungLuatRepository.save(lienKetTrieuChungLuatEntity);
+                    
+                     // tìm xem có luật loại 3 nào có triệu chứng của luật loại 1 mới không
+                     Long loai_luat3 = 3L;
+                Long maLuatLoai3 = lienKetTrieuChungLuatRepository.findLuatByMaTc(value, loai_luat3);
+                //Nếu có luật loại 3 
+                if (maLuatLoai3 != null) {
+                    System.out.println("có luật => " + maLuatLoai3);
+                    //xóa luật loại 3 nếu triệu chứng trong luật loại 3 có trong luật loại 1
+                    //B1: tìm triệu chứng luật
+                    Optional<LienKetTrieuChungLuatEntity> lienKetTrieuChungLuatEntity1
+                            = Optional.ofNullable(lienKetTrieuChungLuatRepository.findByMaLuatAndMaTrieuChung(maLuatLoai3, value));
+
+                    if (lienKetTrieuChungLuatEntity1.isPresent()) {
+                        LienKetTrieuChungLuatEntity entity = lienKetTrieuChungLuatEntity1.get();
+                        // Xử lý entity nếu tồn tại
+                        System.out.println("Tồn tại: " + "entiti là: " + entity);
+                        lienKetTrieuChungLuatRepository.delete(entity);
+                        System.out.println("Đã xóa: " + entity);
+                    }
+
+                } else {
+                    System.out.println("K có luat " + maLuatLoai3);
+
+                }
                 }
             }
             // không có trường hợp else vì tất cả các bệnh đều có luật loại 1

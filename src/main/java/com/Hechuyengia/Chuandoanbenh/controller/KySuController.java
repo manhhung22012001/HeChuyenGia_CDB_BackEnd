@@ -7,11 +7,13 @@ package com.Hechuyengia.Chuandoanbenh.controller;
 import com.Hechuyengia.Chuandoanbenh.DTO.UserInfoDTO;
 import com.Hechuyengia.Chuandoanbenh.entity.BenhEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.BenhSuggestEntity;
+import com.Hechuyengia.Chuandoanbenh.entity.LienKetTrieuChungLuatEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.TrieuChungEntity;
 import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.BenhSuggestRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.LienKetBenhLuatRepository;
+import com.Hechuyengia.Chuandoanbenh.repository.LienKetTrieuChungLuatRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungBenhRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.TrieuChungRepository;
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
@@ -63,6 +65,8 @@ public class KySuController {
     LuatService luatService;
     @Autowired
     TrieuChungBenhRepository trieuChungBenhRepository;
+    @Autowired
+    LienKetTrieuChungLuatRepository lienKetTrieuChungLuatRepository;
 
     @Autowired
     public KySuController(UserService userService) {
@@ -189,21 +193,46 @@ public class KySuController {
             for (Integer value : maTrieuChungListRaw) {
                 maTrieuChungList.add(value.longValue());
             }
+            System.out.println("Ma Benh" + ma_benh + " Trieu chung list:" + maTrieuChungList);
             luatService.saveLuatLoai1(userId, loai_luat, ma_benh, maTrieuChungList);
             // trả về danh sách
             List<Long> nonNullMatchingBenhIdsList = new ArrayList<>();
 
             for (Long ma_trieu_chung : maTrieuChungList) {
+                // hmaf dưới là hàm lấy các mã bệnh trong bảng triệu chứng bệnh có cùng mã triệu chứng nhưng khác mã bệnh
                 List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
-                System.out.println("ABC" + matchingBenhIds);
+                //System.out.println("ABC" + matchingBenhIds);
 
                 // Check if matchingBenhIds is not null and add 1 to nonNullMatchingBenhIdsList, else add 0
                 if (matchingBenhIds != null && !matchingBenhIds.isEmpty()) {
-//                    nonNullMatchingBenhIdsList.add(1);
                     nonNullMatchingBenhIdsList.add(0L);
                 } else {
                     nonNullMatchingBenhIdsList.add(ma_trieu_chung);
                 }
+                // tìm xem có luật loại 3 nào có triệu chứng của luật loại 1 mới không
+                Long loai_luat3 = 3L;
+                Long maLuatLoai3 = lienKetTrieuChungLuatRepository.findLuatByMaTc(ma_trieu_chung, loai_luat3);
+                //Nếu có luật loại 3 
+                if (maLuatLoai3 != null) {
+                    System.out.println("có luật => " + maLuatLoai3);
+                    //xóa luật loại 3 nếu triệu chứng trong luật loại 3 có trong luật loại 1
+                    //B1: tìm triệu chứng luật
+                    Optional<LienKetTrieuChungLuatEntity> lienKetTrieuChungLuatEntity
+                            = Optional.ofNullable(lienKetTrieuChungLuatRepository.findByMaLuatAndMaTrieuChung(maLuatLoai3, ma_trieu_chung));
+
+                    if (lienKetTrieuChungLuatEntity.isPresent()) {
+                        LienKetTrieuChungLuatEntity entity = lienKetTrieuChungLuatEntity.get();
+                        // Xử lý entity nếu tồn tại
+                        System.out.println("Tồn tại: " + "entiti là: " + entity);
+                        lienKetTrieuChungLuatRepository.delete(entity);
+                        System.out.println("Đã xóa: " + entity);
+                    }
+
+                } else {
+                    System.out.println("K có luat " + maLuatLoai3);
+
+                }
+
             }
             //System.out.println("Non-null matching BenhIds: " + nonNullMatchingBenhIdsList);
             responseBody.put("nonNullMatchingBenhIdsList", nonNullMatchingBenhIdsList);
@@ -304,14 +333,14 @@ public class KySuController {
 
     @PutMapping("/saveLuatTrieuChungSuggestIntoTrieuChungBenh/{userId}")
     public Map<String, Object> saveLuatTrieuChungSuggest(@PathVariable Long userId,
-                                                        @RequestBody Map<String, Object> requestBody) {
+            @RequestBody Map<String, Object> requestBody) {
         Map<String, Object> responseBody = new HashMap<>();
         try {
             Integer ma_benh_int = (Integer) requestBody.get("ma_benh");
             Long ma_benh = ma_benh_int != null ? ma_benh_int.longValue() : null;
 
-            List<Integer> existedInDatabase = (List<Integer>) requestBody.get("existedInDatabase");
-            List<Integer> notExistInDatabase = (List<Integer>) requestBody.get("notExistInDatabase");
+            List<Integer> existedInDatabase = (List<Integer>) requestBody.get("existedInDatabase");// tc trong csdl
+            List<Integer> notExistInDatabase = (List<Integer>) requestBody.get("notExistInDatabase");// tc k có trong csdl
             // Chuyển đổi từ Integer sang Long
             List<Long> existedInDatabaseLong = existedInDatabase.stream().map(Long::valueOf).collect(Collectors.toList());
             List<Long> notExistInDatabaseLong = notExistInDatabase.stream().map(Long::valueOf).collect(Collectors.toList());
@@ -320,7 +349,7 @@ public class KySuController {
             // Ví dụ: In ra để kiểm tra xem đã nhận được đúng không
             System.out.println("triệu chứng đã có để làm luật loại 1': " + existedInDatabaseLong);
             System.out.println("triệu chứng chưa có bao giờ thì làm luật loại 3': " + notExistInDatabaseLong);
-            luatService.saveLuatWithTrieuChungMoi(userId,ma_benh,existedInDatabaseLong,notExistInDatabaseLong);
+            luatService.saveLuatWithTrieuChungMoi(userId, ma_benh, existedInDatabaseLong, notExistInDatabaseLong);
             // Thực hiện các thao tác khác ở đây...
             responseBody.put("message", "Thêm Triệu Chứng thành công");
         } catch (Exception e) {
