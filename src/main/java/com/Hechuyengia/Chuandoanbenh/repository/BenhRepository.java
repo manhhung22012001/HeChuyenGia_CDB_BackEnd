@@ -41,6 +41,9 @@ public interface BenhRepository extends JpaRepository<BenhEntity, Long> {
     @Query("SELECT tc.ten_benh FROM BenhEntity tc WHERE LOWER(tc.ten_benh) LIKE LOWER(:keyword)")
     public List<String> findByTen_benhContainingIgnoreCase(@Param("keyword") String keyword);
 
+    @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM BenhEntity t WHERE t.ten_benh = :keyword")
+    boolean existsByTenBenh(@Param("keyword") String keyword);
+
     @Query("SELECT t FROM BenhEntity t WHERE t.ma_benh = :ma_benh")
     BenhEntity findByMaBenh(@Param("ma_benh") Long ma_benh);
 
