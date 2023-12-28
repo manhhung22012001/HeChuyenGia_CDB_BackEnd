@@ -20,6 +20,8 @@ import static com.Hechuyengia.Chuandoanbenh.DTO.generateOTP.generateOTP;
 import com.Hechuyengia.Chuandoanbenh.service.OtpService;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -71,9 +73,9 @@ public class AuthenticationController {
         this.tokenProvider = tokenProvider;
     }
 
-    @CrossOrigin
+    
     @PostMapping("/login")
-    public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {      
+    public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         String decryptedPassword = decrypt(loginRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -86,6 +88,7 @@ public class AuthenticationController {
         String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
         return new LoginResponse(jwt, "200");
     }
+
     public static String decrypt(String encryptedPassword) {
         try {
             byte[] keyBytes = Arrays.copyOf(SECRET_KEY.getBytes("UTF-8"), 16); // Lấy đủ độ dài cho 128-bit key
@@ -100,21 +103,44 @@ public class AuthenticationController {
         }
     }
 
-    @CrossOrigin
+//    @CrossOrigin
+//    @PostMapping("/register")
+//    public ResponseEntity<?> post(@RequestBody UserEntity input) {
+//        System.out.println("Ten" + input.getFullname() + "sđt " + input.getPhonenumber() + "email " + input.getEmail() + "username" + input.getUsername() + "pass" + input.getPassword() + "status" + input.getStatus() + "role: " + input.getRole());
+//        if (userRepository.existsByEmail(input.getEmail())) {
+//            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+//        } else if (userRepository.existsByPhonenumber(input.getPhonenumber())) {
+//            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+//        } else {
+//            userRepository.save(input);
+//            return new ResponseEntity<>(null, HttpStatus.CREATED);
+//        }
+//    }
+    
     @PostMapping("/register")
-    public ResponseEntity<?> post(@RequestBody UserEntity input) {
-        System.out.println("Ten" + input.getFullname() + "sđt " + input.getPhonenumber() + "email " + input.getEmail() + "username" + input.getUsername() + "pass" + input.getPassword() + "status" + input.getStatus()+"role: "+input.getRole());
-        if (userRepository.existsByEmail(input.getEmail())) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        } else if (userRepository.existsByPhonenumber(input.getPhonenumber())) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    public Map<String, Object> post(@RequestBody UserEntity input) {
+        System.out.println("Ten" + input.getFullname() + "sđt " + input.getPhonenumber() + "email " + input.getEmail() + "username" + input.getUsername() + "pass" + input.getPassword() + "status" + input.getStatus() + "role: " + input.getRole());
+
+        Map<String, Object> responseBody = new HashMap<>();
+
+        boolean emailExists = userRepository.existsByEmail(input.getEmail());
+        boolean phoneExists = userRepository.existsByPhonenumber(input.getPhonenumber());
+
+        if (emailExists && phoneExists) {
+            responseBody.put("message", "Email và số điện thoại đã tồn tại.");
+        } else if (emailExists) {
+            responseBody.put("message", "Email đã tồn tại.");
+        } else if (phoneExists) {
+            responseBody.put("message", "Số điện thoại đăng ký đã tồn tại.");
         } else {
             userRepository.save(input);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
+            responseBody.put("message", "Đăng ký thành công.");
         }
+
+        return responseBody;
     }
 
-    @CrossOrigin
+    
     @PostMapping("/forgotpass")
     public ResponseEntity<?> checkUserInfo(@RequestBody UserEntity request) {
         //String phoneNumberAsString = String.valueOf(request.getPhonenumber());
@@ -140,7 +166,7 @@ public class AuthenticationController {
         }
     }
 
-    @CrossOrigin
+    
     @PostMapping("/CheckOTP")
     public ResponseEntity<?> verifyOTP(@RequestBody EmailOtpDTO request) {
         String email = request.getEmail();
