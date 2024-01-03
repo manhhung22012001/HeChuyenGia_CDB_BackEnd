@@ -73,7 +73,7 @@ public class KySuController {
         this.userService = userService;
     }
 
-    @GetMapping("/checkTC/{userId}")
+    @GetMapping("/checkTC/{userId}")// API nhận tên tc và check xem đã có trong csdl chưa
     public Map<String, Object> CheckTc(
             @PathVariable Long userId,
             @RequestParam(value = "ten_trieu_chung") String ten_trieu_chung
@@ -101,7 +101,7 @@ public class KySuController {
         return responseBody;
     }
 
-    @PostMapping("/add-Benh-and_TC/{userId}")
+    @PostMapping("/add-Benh-and_TC/{userId}")// API thêm bệnh mới và tc mới
     public Map<String, Object> addBenhVaTrieuChung(
             @PathVariable("userId") Long userId,
             @RequestBody Map<String, Object> requestBody) {
@@ -197,7 +197,8 @@ public class KySuController {
             luatService.saveLuatLoai1(userId, loai_luat, ma_benh, maTrieuChungList);
             // trả về danh sách
             List<Long> nonNullMatchingBenhIdsList = new ArrayList<>();
-
+            
+            // 1.
             for (Long ma_trieu_chung : maTrieuChungList) {
                 // hmaf dưới là hàm lấy các mã bệnh trong bảng triệu chứng bệnh có cùng mã triệu chứng nhưng khác mã bệnh
                 List<Long> matchingBenhIds = trieuChungBenhRepository.findBenhIdsByTrieuChungList(ma_trieu_chung, ma_benh);
@@ -272,14 +273,14 @@ public class KySuController {
         return responseBody;
     }
 
-    @GetMapping("/getallBenhOfTtrieuChungMoi")
+    @GetMapping("/getallBenhOfTtrieuChungMoi")// API get all new benh
     public List<BenhSuggestEntity> listBenh() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return benhSuggestRepository.findAll();
     }
 
-    @GetMapping("/trieuChungSuggestMoi/{userId}")
+    @GetMapping("/trieuChungSuggestMoi/{userId}")// API get TC when choose benh
     public ResponseEntity<List<Object[]>> getTrieuChungSuggestMoiByMaBenhCu(@PathVariable Long userId,
             @RequestParam(value = "ma_benh_suggest") Long ma_benh_suggest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -296,7 +297,7 @@ public class KySuController {
         }
     }
 
-    @PutMapping("/saveTrieuChungSuggestIntoTrieuChungBenh")
+    @PutMapping("/saveTrieuChungSuggestIntoTrieuChungBenh")// API save new tc for benh
     public Map<String, Object> saveTrieuChungSuggest(@RequestBody Map<String, Object> requestBody) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> responseBody = new HashMap<>();
@@ -316,7 +317,7 @@ public class KySuController {
                     .map(trieuChung -> trieuChung.get("tenTrieuChung"))
                     .collect(Collectors.toList());
             String trieuChungMap = trieuChungService.saveTrieuChungSuggest(ma_benh, tenTrieuChungList, trang_thai, ma_benh_suggest);
-
+            // tìm luật của bệnh cũ để thêm
             String luaOfBenhAndTrieuChung = luatService.getLuatAndTrieuChungByMaBenhAsJson(ma_benh);
             //luatService.separateTrieuChungMap(trieuChungMap);
             System.out.println("lua of benh" + luaOfBenhAndTrieuChung);
@@ -331,7 +332,7 @@ public class KySuController {
         return responseBody;
     }
 
-    @PutMapping("/saveLuatTrieuChungSuggestIntoTrieuChungBenh/{userId}")
+    @PutMapping("/saveLuatTrieuChungSuggestIntoTrieuChungBenh/{userId}")// API save new tc into Luat
     public Map<String, Object> saveLuatTrieuChungSuggest(@PathVariable Long userId,
             @RequestBody Map<String, Object> requestBody) {
         Map<String, Object> responseBody = new HashMap<>();
@@ -350,7 +351,7 @@ public class KySuController {
             System.out.println("triệu chứng đã có để làm luật loại 1': " + existedInDatabaseLong);
             System.out.println("triệu chứng chưa có bao giờ thì làm luật loại 3': " + notExistInDatabaseLong);
             luatService.saveLuatWithTrieuChungMoi(userId, ma_benh, existedInDatabaseLong, notExistInDatabaseLong);
-            // Thực hiện các thao tác khác ở đây...
+            
             responseBody.put("message", "Thêm Triệu Chứng thành công");
         } catch (Exception e) {
             responseBody.put("error", "Thêm Triệu Chứng Thất Bại");

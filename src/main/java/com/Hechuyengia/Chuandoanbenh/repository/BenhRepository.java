@@ -36,7 +36,7 @@ public interface BenhRepository extends JpaRepository<BenhEntity, Long> {
             + "LEFT JOIN lien_ket_benh_luat m ON t.ma_benh = m.ma_benh "
             + "WHERE m.ma_luat IS NULL "
             + "AND t.ten_benh = :ten_benh", nativeQuery = true)
-    List<Object[]> findBenhByTenBenh(@Param("ten_benh") String ten_benh);
+    List<Object[]> findBenhByTenBenh(@Param("ten_benh") String ten_benh);//nativeQuery = true,cung cấp một truy vấn SQL thô (native SQL query) cho cơ sở dữ liệu của bạn và Spring Data JPA sẽ thực thi truy vấn đó một cách trực tiếp mà không cần chuyển đổi nó thành JPQL.
 
     @Query("SELECT tc.ten_benh FROM BenhEntity tc WHERE LOWER(tc.ten_benh) LIKE LOWER(:keyword)")
     public List<String> findByTen_benhContainingIgnoreCase(@Param("keyword") String keyword);

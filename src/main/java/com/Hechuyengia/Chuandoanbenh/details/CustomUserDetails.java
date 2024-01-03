@@ -33,7 +33,7 @@ public class CustomUserDetails implements UserDetails {
             authorities.add(new SimpleGrantedAuthority("ROLE_QUAN_TRI_VIEN"));
         }
 
-        // Bạn có thể thêm các quyền khác nếu cần thiết
+        
         // authorities.add(new SimpleGrantedAuthority("ROLE_OTHER_ROLE"));
         return authorities;
 

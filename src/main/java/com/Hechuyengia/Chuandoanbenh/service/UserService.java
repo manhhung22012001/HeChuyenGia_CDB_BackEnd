@@ -138,7 +138,7 @@ public class UserService implements UserDetailsService {
         if (file != null && !file.isEmpty()) {
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             String fullPath = uploadPath + File.separator + fileName;
-
+            // File.separator là /
             // Sử dụng Resource để tạo đường dẫn lưu trữ
             Resource resource = new UrlResource("file:" + fullPath);
 

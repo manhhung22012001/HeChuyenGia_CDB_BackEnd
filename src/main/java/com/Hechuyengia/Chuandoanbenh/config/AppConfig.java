@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  *
  * @author tranm
  */
-@Component
+@Component // Spring component, cho phép quản lý các bean của ứng dụng.
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "app")
 public class AppConfig {

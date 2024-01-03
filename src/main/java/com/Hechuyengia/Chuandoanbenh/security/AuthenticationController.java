@@ -189,17 +189,7 @@ public class AuthenticationController {
         }
     }
 
-//    @PostMapping("/reset-password")
-//    public ResponseEntity<?> resetPassword(@RequestBody UserEntity request) {
-//        // Mã hóa mật khẩu trước khi lưu người dùng
-//            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//            String encodedPassword = passwordEncoder.encode(request.getPassword());
-//            request.setPassword(encodedPassword);
-//
-//            userRepository.save(request);
-//            return new ResponseEntity<>(null, HttpStatus.CREATED);
-//                
-//    }
+
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody UserEntity request) {
         // Mã hóa mật khẩu trước khi lưu người dùng

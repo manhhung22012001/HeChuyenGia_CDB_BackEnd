@@ -106,7 +106,7 @@ public class LuatService {
         LuatEntity savedLuat = luatRepository.save(luatEntity);
         Long ma_luat = savedLuat.getMa_luat(); // Lấy ma_luat sau khi đã lưu thành công
 
-        // Sử dụng đối tượng BenhEntity để gán vào LienKetBenhLuatEntity
+        // 2. Sử dụng đối tượng BenhEntity để gán vào LienKetBenhLuatEntity
         LienKetBenhLuatEntity lienKetBenhLuatEntity = new LienKetBenhLuatEntity();
         lienKetBenhLuatEntity.setLuat(savedLuat); // Gán đối tượng LuatEntity vào LienKetBenhLuatEntity
         BenhEntity benhEnitity = benhRepository.findById(ma_benh).orElse(null);

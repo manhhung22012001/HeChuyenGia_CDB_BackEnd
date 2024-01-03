@@ -57,6 +57,7 @@ public class BenhSuggestService {
         List<Boolean> existsList = new ArrayList<>(); // Tạo danh sách để lưu các kết quả exists
         List<String> trueTrieuChungList = new ArrayList<>(); // Khởi tạo danh sách để lưu tên triệu chứng khi exists là true
         
+        //1. XỬ LÝ ĐỂ CHECK XEM TRIỆU CHỨNG THÊM MỚI ĐÓ ĐÃ CÓ Ở BỆNH ĐÓ CHƯA
         for (String tenTrieuChung : trieuChungList) {
             TrieuChungEntity existingTrieuChung = trieuChungRepository.findTrieuChungByTenTrieuChung(tenTrieuChung);
             System.out.println("TCEntity: " + existingTrieuChung);
@@ -82,6 +83,7 @@ public class BenhSuggestService {
             }
         }
         System.out.println("Count " + countTrue);
+        //2. NẾU CHƯA CÓ THÌ THÊM MỚI
         if (countTrue == 0) {
             //lưu vào bảng bệnh suggest
             BenhSuggestEntity benhSuggestEntity = new BenhSuggestEntity();

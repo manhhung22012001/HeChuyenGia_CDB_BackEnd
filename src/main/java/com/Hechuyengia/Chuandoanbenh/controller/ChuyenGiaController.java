@@ -77,7 +77,6 @@ public class ChuyenGiaController {
     @GetMapping("/getall")
     public List<BenhEntity> list() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         return benhRepository.findAll();
     }
 
@@ -86,8 +85,7 @@ public class ChuyenGiaController {
     public ResponseEntity<List<BenhEntity>> list(@PathVariable String loai_he) {
         //System.out.println("Ma loai he nhan duoc la " + loai_he);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<BenhEntity> result = benhRepository.findByLoaiHe(loai_he);
-        // ... (process result if needed)
+        List<BenhEntity> result = benhRepository.findByLoaiHe(loai_he);        
         return ResponseEntity.ok(result);
     }
 
@@ -175,10 +173,13 @@ public class ChuyenGiaController {
         try {
             if (requestBody.containsKey("ten_benh") && requestBody.containsKey("ma_benh") && requestBody.containsKey("trieu_chung")) {
                 String ten_benh = (String) requestBody.get("ten_benh");
+                
                 Integer ma_benh_int = (Integer) requestBody.get("ma_benh");
                 Long ma_benh = ma_benh_int != null ? ma_benh_int.longValue() : null;
+                
                 Integer trang_thai_int = (Integer) requestBody.get("trang_thai");
                 Long trang_thai = trang_thai_int != null ? trang_thai_int.longValue() : null;
+                
                 List<Map<String, String>> trieuChungList = (List<Map<String, String>>) requestBody.get("trieu_chung");
                 System.out.println("ma benh: " + ma_benh + " Ten benh: " + ten_benh + " Danh sach TC: " + trieuChungList + " id user " + userId + "Trang thai:" + trang_thai);
 

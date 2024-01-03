@@ -42,26 +42,26 @@ public class DiagnosisController {
     @Autowired
     BenhRepository benhRepository;
     @CrossOrigin
-    @PostMapping("/search1") // 
+    @PostMapping("/search1") // Api triệu chứng cơ bản xuất hiện nhiều
     public ResponseEntity<List<Object[]>> getTrieuChungWithCountGreaterThanSix() {
         List<Object[]> trieuchungResults = trieuchungService.getTrieuChungWithCountGreaterThanSix();
         return ResponseEntity.ok(trieuchungResults);
     }
     @CrossOrigin
-    @PostMapping("/search11") // 
+    @PostMapping("/search11") // Api lấy các triệu chứng đặc biệt
     public ResponseEntity<List<Object[]>> getTrieuChungonly() {
         List<Object[]> trieuchungResults = trieuchungService.getTrieuChungonly();
         return ResponseEntity.ok(trieuchungResults);
     }
     @CrossOrigin
-    @PostMapping("/search2")
+    @PostMapping("/search2")// Api nhận mã TC and lấy các triệu chứng của có cùng trong luật with tc đó
     public ResponseEntity<List<TrieuChungEntity>> searchDiagnosis(@RequestBody List<String> selectedSymptomCodes) {
         //System.out.println("mang nhan duoc "+ selectedSymptomCodes);
         List<TrieuChungEntity> symptomsInSelectedLuats = diagnosisService.getSymptomsInSelectedLuats(selectedSymptomCodes);
         return ResponseEntity.ok(symptomsInSelectedLuats);
     }
     @CrossOrigin
-    @PostMapping("/ketqua")
+    @PostMapping("/ketqua")// API trả về kq chẩn đoán nếu không chọn tc đặc biệt
      public ResponseEntity<List<BenhEntity>> KQ_cdb(@RequestBody List<String> danh_sach_tc) {
         //System.out.println("mang nhan duoc "+ danh_sach_tc);
         List<BenhEntity> findSymptomsInSelectedBenh = diagnosisService.getSymptomsInSelectedBenh(danh_sach_tc);
@@ -69,14 +69,14 @@ public class DiagnosisController {
         
     }
      @CrossOrigin
-    @PostMapping("/ketqua1")
+    @PostMapping("/ketqua1")// API trả về kq chẩn đoán nếu chọn tc đặc biệt
     public ResponseEntity<List<BenhEntity>> KQ_cdb1(@RequestBody List<String> danh_sach_tc) {
         List<BenhEntity> findSymptomsInSelectedBenh1 = diagnosisService.getSymptomsInSelectedBenh1(danh_sach_tc);
         return ResponseEntity.ok(findSymptomsInSelectedBenh1);
         
     }
     @CrossOrigin
-    @GetMapping("/trieuchung/{ma_benh}")
+    @GetMapping("/trieuchung/{ma_benh}") // tìm triệu chứng bởi mã bệnh. 
     public ResponseEntity<List<Object[]>> getTrieuChungByMaBenh(@PathVariable Long ma_benh) {
         
         List<Object[]> trieuchung = benhRepository.findTrieuChungByMaBenh(ma_benh);

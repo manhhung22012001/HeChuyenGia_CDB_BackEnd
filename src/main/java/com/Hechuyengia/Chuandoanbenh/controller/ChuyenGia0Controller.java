@@ -4,32 +4,20 @@
  */
 package com.Hechuyengia.Chuandoanbenh.controller;
 
-import com.Hechuyengia.Chuandoanbenh.DTO.UserInfoDTO;
-import com.Hechuyengia.Chuandoanbenh.entity.UserEntity;
+
 import com.Hechuyengia.Chuandoanbenh.repository.UserRepository;
 import com.Hechuyengia.Chuandoanbenh.service.UserService;
-import java.io.IOException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.StringUtils;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 
 /**
  *
@@ -50,8 +38,8 @@ public class ChuyenGia0Controller {
     @PostMapping("/userinfo/{userId}")
     public Map<String, Object> uploadFilesAndUserInfo(
             @PathVariable Long userId,
-            @RequestParam(value = "anhdaidien", required = false) MultipartFile anhdaidien,
-            @RequestParam(value = "bangTotNghiepYKhoa", required = false) MultipartFile bangTotNghiepYKhoa,
+            @RequestParam(value = "anhdaidien", required = false) MultipartFile anhdaidien,// required = false không bắt buộc có
+            @RequestParam(value = "bangTotNghiepYKhoa", required = true) MultipartFile bangTotNghiepYKhoa,
             @RequestParam(value = "chungChiHanhNghe", required = false) MultipartFile chungChiHanhNghe,
             @RequestParam(value = "chungNhanChuyenKhoa", required = false) MultipartFile chungNhanChuyenKhoa,
             @RequestParam(value = "hoc_ham", required = false) String hoc_ham,
